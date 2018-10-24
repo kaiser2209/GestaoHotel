@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  *
  * @author Charles
  */
-public class Cliente {
+public class Pessoa {
     private int id;
     private String nome;
     private String end_rua;
