@@ -137,7 +137,7 @@
                <graphic>
                   <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../novo.png" />
+                        <Image url="@../imagens/novo.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -152,7 +152,7 @@
                <graphic>
                   <ImageView fitHeight="53.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../editar.png" />
+                        <Image url="@../imagens/editar.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -164,7 +164,7 @@
                <graphic>
                   <ImageView fitHeight="39.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../excluir.png" />
+                        <Image url="@../imagens/excluir.png" />
                      </image>
                   </ImageView>
                </graphic>
