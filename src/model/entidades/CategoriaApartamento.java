@@ -7,7 +7,7 @@ package model.entidades;
 public class CategoriaApartamento {
     private String codigo;
     private String categoria;
-    private String descricao;
+    private float valorDiaria;
 
     public String getCodigo() {
         return codigo;
@@ -25,11 +25,13 @@ public class CategoriaApartamento {
         this.categoria = categoria;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public float getValorDiaria() {
+        return valorDiaria;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setValorDiaria(float valorDiaria) {
+        this.valorDiaria = valorDiaria;
     }
+    
+    
 }
