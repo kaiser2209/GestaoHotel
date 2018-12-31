@@ -14,11 +14,14 @@ public class Pessoa {
     private String endBairro;
     private String endComplemento;
     private String endCidade;
+    private String endCep;
     private String endEstado;
     private String endPais;
     private String rg;
     private String cpf;
     private String email;
+    private String telefone;
+    private String celular;
     private LocalDate dataNascimento;
     private LocalDateTime dataCadastro;
 
@@ -124,6 +127,30 @@ public class Pessoa {
 
     public void setEndPais(String endPais) {
         this.endPais = endPais;
+    }
+
+    public String getEndCep() {
+        return endCep;
+    }
+
+    public void setEndCep(String endCep) {
+        this.endCep = endCep;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
     
     

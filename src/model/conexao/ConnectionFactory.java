@@ -21,7 +21,7 @@ public class ConnectionFactory {
     
     //String de conexao
     private static final String CONEXAO = 
-            "jdbc:mysql://localhost:3306/" + BANCO;
+            "jdbc:mysql://localhost:3306/" + BANCO + "?useTimezone=true&serverTimezone=UTC";
     
     //Usuário
     private static final String USUARIO = "root";

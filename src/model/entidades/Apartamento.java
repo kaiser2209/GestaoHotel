@@ -7,7 +7,7 @@ package model.entidades;
 public class Apartamento {
     private int id;
     private int numero;
-    private int categoria;
+    private CategoriaApartamento categoria;
 
     public int getId() {
         return id;
@@ -25,11 +25,11 @@ public class Apartamento {
         this.numero = numero;
     }
 
-    public int getCategoria() {
+    public CategoriaApartamento getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(int categoria) {
+    public void setCategoria(CategoriaApartamento categoria) {
         this.categoria = categoria;
     }
 }

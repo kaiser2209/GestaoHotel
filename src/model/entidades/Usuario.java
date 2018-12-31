@@ -6,13 +6,13 @@ package model.entidades;
  */
 public class Usuario extends Pessoa {
     private int idUsuario;
-    private int funcao;
+    private Funcao funcao;
 
-    public int getFuncao() {
+    public Funcao getFuncao() {
         return funcao;
     }
 
-    public void setFuncao(int funcao) {
+    public void setFuncao(Funcao funcao) {
         this.funcao = funcao;
     }
 
