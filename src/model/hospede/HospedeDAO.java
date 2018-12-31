@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import model.conexao.ConnectionFactory;
 import model.entidades.Hospede;
@@ -22,8 +23,8 @@ public class HospedeDAO {
     public void salvar(Hospede h) throws SQLException {
         String sql = "INSERT INTO clientes (nome, end_rua, end_numero, end_bairro, " +
                 "end_complemento, end_cidade, end_estado, end_pais, end_cep, rg, " +
-                "cpf, data_nascimento, email, telefone, celular) VALUE "
-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "cpf, data_nascimento, email, telefone, celular, data_cadastro) VALUE "
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
         stmt.setString(1, h.getNome());
         stmt.setString(2, h.getEndRua());
@@ -40,6 +41,7 @@ public class HospedeDAO {
         stmt.setString(13, h.getEmail());
         stmt.setString(14, h.getTelefone());
         stmt.setString(15, h.getCelular());
+        stmt.setString(16, h.getDataCadastro().toString());
         
         stmt.executeUpdate();
         
@@ -89,7 +91,7 @@ public class HospedeDAO {
     }
     
     public Hospede buscarPeloCpf (String cpf) throws SQLException {
-        String sql = "SELECT * From Hospede WHERE cpf = ?";
+        String sql = "SELECT * From clientes WHERE cpf = ?";
         
         PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
         
@@ -115,8 +117,9 @@ public class HospedeDAO {
             h.setEmail(resultado.getString("email"));
             h.setTelefone(resultado.getString("telefone"));
             h.setCelular(resultado.getString("celular"));
-            h.setDataNascimento(LocalDate.parse(resultado.getDate("data_nascimento").toString()));
-            h.setDataCadastro(LocalDateTime.parse(resultado.getDate("data_cadastro").toString()));
+            h.setDataNascimento(resultado.getDate("data_nascimento").toLocalDate());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            h.setDataCadastro(LocalDateTime.parse(resultado.getTimestamp("data_cadastro").toString(), formatter));
         }
         
         resultado.close();
@@ -152,8 +155,9 @@ public class HospedeDAO {
             h.setEmail(resultado.getString("email"));
             h.setTelefone(resultado.getString("telefone"));
             h.setCelular(resultado.getString("celular"));
-            h.setDataNascimento(LocalDate.parse(resultado.getDate("data_nascimento").toString()));
-            h.setDataCadastro(LocalDateTime.parse(resultado.getDate("data_cadastro").toString()));
+            h.setDataNascimento(LocalDate.parse(resultado.getString("data_nascimento")));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            h.setDataCadastro(LocalDateTime.parse(resultado.getTimestamp("data_cadastro").toString(), formatter));
             
             hospedes.add(h);
         }
@@ -191,8 +195,9 @@ public class HospedeDAO {
             h.setEmail(resultado.getString("email"));
             h.setTelefone(resultado.getString("telefone"));
             h.setCelular(resultado.getString("celular"));
-            h.setDataNascimento(LocalDate.parse(resultado.getDate("data_nascimento").toString()));
-            h.setDataCadastro(LocalDateTime.parse(resultado.getDate("data_cadastro").toString()));
+            h.setDataNascimento(LocalDate.parse(resultado.getString("data_nascimento")));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            h.setDataCadastro(LocalDateTime.parse(resultado.getTimestamp("data_cadastro").toString(), formatter));
             
             hospedes.add(h);
         }
@@ -207,5 +212,11 @@ public class HospedeDAO {
         String sql = "SELECT * From clientes WHERE nome LIKE ?";
         
         return filtrar(pesquisa, sql);
+    }
+    
+    public ArrayList<Hospede> filtrarPorCpf(String pesquisa) throws SQLException {
+        ArrayList<Hospede> lista = new ArrayList<>();
+        lista.add(buscarPeloCpf(pesquisa));
+        return lista;
     }
 }

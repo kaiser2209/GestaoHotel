@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -14,11 +15,11 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospede.cadastro.CadastroHospedeController">
    <center>
-      <VBox prefHeight="350.0" prefWidth="800.0" spacing="15.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="450.0" prefWidth="800.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="63.0" prefWidth="392.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#novoRegistro" prefHeight="72.0" prefWidth="110.0" text="Novo">
+                  <Button fx:id="btnNovo" mnemonicParsing="false" onAction="#novoRegistro" prefHeight="72.0" prefWidth="110.0" text="Novo">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -30,7 +31,7 @@
                         <Font name="Arial Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#editarRegistro" prefHeight="71.0" prefWidth="110.0" text="Editar">
+                  <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarRegistro" prefHeight="71.0" prefWidth="110.0" text="Editar">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -42,7 +43,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#apagarRegistro" prefHeight="71.0" prefWidth="110.0" text="Excluir">
+                  <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#apagarRegistro" prefHeight="71.0" prefWidth="110.0" text="Excluir">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -54,7 +55,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#cancelarRegistro" prefHeight="71.0" prefWidth="110.0" text="Cancelar">
+                  <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cancelarRegistro" prefHeight="71.0" prefWidth="110.0" text="Cancelar">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -66,7 +67,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#salvarRegistro" prefHeight="71.0" prefWidth="110.0" text="Salvar">
+                  <Button fx:id="btnSalvar" mnemonicParsing="false" onAction="#salvarRegistro" prefHeight="71.0" prefWidth="110.0" text="Salvar">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
@@ -78,14 +79,14 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#buscarDados" prefHeight="71.0" prefWidth="110.0" text="Buscar">
+                  <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#buscarDados" prefHeight="71.0" prefWidth="110.0" text="Filtrar">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="39.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../imagens/search.png" />
+                              <Image url="@../../../imagens/icons8-filter-96.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -97,7 +98,12 @@
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <JFXTextField fx:id="txtNome" focusColor="#1c47eb" labelFloat="true" prefHeight="26.0" prefWidth="350.0" promptText="Nome">
+                  <JFXTextField fx:id="txtId" editable="false" labelFloat="true" prefHeight="26.0" prefWidth="80.0" promptText="Id">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField fx:id="txtNome" focusColor="#1c47eb" labelFloat="true" prefHeight="26.0" prefWidth="300.0" promptText="Nome">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -195,16 +201,69 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Label text="Data de Nascimento:">
+                  <Label fx:id="lblDataNascimento" text="Data de Nascimento:">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </Label>
-                  <JFXDatePicker fx:id="dtDataNascimento" />
+                  <JFXDatePicker fx:id="dtDataNascimento" stylesheets="@../../../estilo/estilo.css" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Button fx:id="btnPrimeiro" mnemonicParsing="false" onAction="#primeiroRegistro">
+                     <graphic>
+                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../imagens/icons8-skip-to-start-96.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnAnterior" mnemonicParsing="false" onAction="#registroAnterior">
+                     <graphic>
+                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../imagens/icons8-rewind-96.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <TextField fx:id="txtRegistroAtual" alignment="CENTER_RIGHT" prefWidth="48.0" text="1">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="lblTotalRegistros" prefWidth="48.0" text="/1">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnProximo" mnemonicParsing="false" onAction="#proximoRegistro">
+                     <graphic>
+                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../imagens/icons8-fast-forward-96.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnUltimo" mnemonicParsing="false" onAction="#ultimoRegistro">
+                     <graphic>
+                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../imagens/icons8-end-96.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
             </HBox>
          </children>
       </VBox>
