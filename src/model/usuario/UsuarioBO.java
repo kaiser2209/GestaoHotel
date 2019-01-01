@@ -5,10 +5,21 @@
  */
 package model.usuario;
 
+import java.sql.SQLException;
+import model.entidades.Usuario;
+
 /**
  *
  * @author guard
  */
 public class UsuarioBO {
+    UsuarioDAO dao;
     
+    public UsuarioBO() {
+        dao = new UsuarioDAO();
+    }
+    
+    public void salvar(Usuario u) throws SQLException {
+        dao.salvar(u);
+    }
 }
