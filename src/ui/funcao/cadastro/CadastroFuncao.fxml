@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="400.0" prefWidth="800.0" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.usuario.cadastro.CadastroUsuarioController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="620.0" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.funcao.cadastro.CadastroFuncaoController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="63.0" prefWidth="392.0" spacing="10.0">
                <children>
@@ -80,134 +80,40 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#buscarDados" prefHeight="71.0" prefWidth="110.0" text="Filtrar">
-                     <font>
-                        <Font name="Arial Bold" size="12.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="39.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../imagens/icons8-filter-96.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </HBox>
-            <HBox prefHeight="50.0" prefWidth="709.0" spacing="10.0">
+            <HBox spacing="10.0">
                <children>
-                  <JFXTextField fx:id="txtId" labelFloat="true" prefWidth="80.0" promptText="Id">
+                  <JFXTextField fx:id="txtId" editable="false" labelFloat="true" prefWidth="80.0" promptText="Id">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="txtNome" focusColor="#1c47eb" labelFloat="true" prefHeight="26.0" prefWidth="252.0" promptText="Nome">
+                  <JFXTextField fx:id="txtNome" labelFloat="true" prefWidth="240.0" promptText="Nome">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="txtRg" labelFloat="true" prefHeight="26.0" prefWidth="193.0" promptText="RG">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCpf" labelFloat="true" prefHeight="26.0" prefWidth="187.0" promptText="CPF">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
+                  <JFXComboBox fx:id="cboNivelAcesso" labelFloat="true" promptText="Nível de Acesso" />
                </children>
-               <padding>
+               <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
+               </VBox.margin>
             </HBox>
-            <HBox prefHeight="50.0" prefWidth="690.0" spacing="10.0">
-               <children>
-                  <JFXTextField fx:id="txtCep" labelFloat="true" prefHeight="26.0" prefWidth="179.0" promptText="CEP">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtRua" labelFloat="true" prefHeight="26.0" prefWidth="303.0" promptText="Endereço">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtNumero" labelFloat="true" prefHeight="26.0" prefWidth="107.0" promptText="Numero">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtBairro" labelFloat="true" prefHeight="26.0" prefWidth="158.0" promptText="Bairro">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-               </children>
-               <padding>
+            <HBox spacing="10.0">
+               <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="50.0" prefWidth="696.0" spacing="10.0">
+               </VBox.margin>
                <children>
-                  <JFXTextField fx:id="txtComplemento" labelFloat="true" prefHeight="26.0" prefWidth="181.0" promptText="Complemento">
+                  <JFXTextArea fx:id="txtDescricao" labelFloat="true" prefRowCount="3" promptText="Descrição">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCidade" labelFloat="true" prefHeight="26.0" prefWidth="202.0" promptText="Cidade">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtEstado" labelFloat="true" prefHeight="26.0" prefWidth="120.0" promptText="Estado">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtPais" labelFloat="true" prefHeight="26.0" prefWidth="200.0" promptText="País">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
+                  </JFXTextArea>
                </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="50.0" prefWidth="690.0" spacing="10.0">
-               <children>
-                  <JFXTextField fx:id="txtTelefone" labelFloat="true" prefHeight="26.0" prefWidth="187.0" promptText="Telefone">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCelular" labelFloat="true" prefHeight="26.0" prefWidth="187.0" promptText="Celular(SMS)">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtEmail" labelFloat="true" prefHeight="26.0" prefWidth="240.0" promptText="E-mail">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="50.0" prefWidth="690.0" spacing="12.0">
-               <children>
-                  <JFXDatePicker fx:id="dtDataNascimento" defaultColor="#171717" promptText="Data Nascimento" style="-fx-font-size: 14;" />
-                  <JFXComboBox fx:id="cboFuncao" labelFloat="true" prefWidth="250.0" promptText="Função" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
@@ -258,11 +164,14 @@
                      </graphic>
                   </Button>
                </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
             </HBox>
          </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </VBox>
    </center>
 </BorderPane>

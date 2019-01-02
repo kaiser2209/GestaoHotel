@@ -229,4 +229,26 @@ public class UsuarioDAO {
         lista.add(buscarPeloCpf(cpf));
         return lista;
     }
+    
+    public ArrayList<Funcao> listarFuncaoCrescente() throws SQLException {
+        String sql = "SELECT * From funcoes Order By nome_funcao";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        ResultSet rs = stmt.executeQuery();
+        ArrayList<Funcao> funcoes = new ArrayList<>();
+        while (rs.next()) {
+            Funcao f = new Funcao();
+            f.setId(rs.getInt("id"));
+            f.setNomeFuncao(rs.getString("nome_funcao"));
+            f.setDescricaoFuncao(rs.getString("descricao"));
+            f.setNivelAcesso(rs.getShort("nivel_acesso"));
+            funcoes.add(f);
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return funcoes;
+    }
 }

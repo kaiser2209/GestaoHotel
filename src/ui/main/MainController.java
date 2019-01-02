@@ -8,6 +8,8 @@ package ui.main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.entidades.Funcao;
 
 /**
  * FXML Controller class
@@ -24,13 +27,13 @@ import javafx.stage.StageStyle;
  * @author guard
  */
 public class MainController implements Initializable {
-
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
     }    
 
     @FXML
@@ -40,6 +43,34 @@ public class MainController implements Initializable {
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setResizable(false);
         stage.setTitle("Cadastro de Hóspede");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    @FXML
+    private void cadastroUsuario(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/usuario/cadastro/CadastroUsuario.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Cadastro de Usuário");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+    
+    private void criarFuncoes() {
+        
+    }
+
+    @FXML
+    private void cadastroFuncao(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/funcao/cadastro/CadastroFuncao.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Cadastro de Função");
         stage.setScene(cena);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

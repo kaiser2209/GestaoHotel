@@ -6,6 +6,8 @@
 package model.usuario;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import model.entidades.Funcao;
 import model.entidades.Usuario;
 
 /**
@@ -21,5 +23,9 @@ public class UsuarioBO {
     
     public void salvar(Usuario u) throws SQLException {
         dao.salvar(u);
+    }
+    
+    public ArrayList<Funcao> listarFuncaoCrescente() throws SQLException {
+        return dao.listarFuncaoCrescente();
     }
 }
