@@ -327,20 +327,26 @@ public class CadastroHospedeController implements Initializable {
             if (controller.get() == BuscaHospedeController.BUSCA_OK) {
                 String campo = controller.getCampo();
                 String valor = controller.getTextoBusca();
+                ArrayList<Hospede> lista = new ArrayList<>();
                 try {
                     if (campo.equals("CPF")) {
-                        hospedes = hBO.listarPorCpf(valor);
-                        regAtual = 0;
+                        lista = hBO.listarPorCpf(valor);
 
                     } else if (campo.equals("Nome")) {
-                        hospedes = hBO.listarPorNome(valor);
-                        regAtual = 0;
+                        lista = hBO.listarPorNome(valor);
                     }
-                    filtroAtivo = true;
-                    limparCampos();
-                    preencherCampos();
-                    estadoBotoes();
-                    atualizarEstadoRegistro();
+                    if (lista.size() > 0) {
+                        hospedes = lista;
+                        regAtual = 0;
+                        filtroAtivo = true;
+                        limparCampos();
+                        preencherCampos();
+                        estadoBotoes();
+                        atualizarEstadoRegistro();
+                        atualizarNumeroRegistro();
+                    } else {
+                        Mensagem.mensagemDeErro("Não foram encontrados registros com o critério informado!");
+                    }
 
                 } catch (SQLException e) {
                     Mensagem.mensagemDeErroBD();
@@ -379,5 +385,13 @@ public class CadastroHospedeController implements Initializable {
         regAtual = hospedes.size() - 1;
         preencherCampos();
         estadoBotoes();
+    }
+    
+    private void atualizarNumeroRegistro() {
+        txtRegistroAtual.setText(String.valueOf(regAtual + 1));
+        lblTotalRegistros.setText("/" + String.valueOf(hospedes.size()));
+        if (filtroAtivo) {
+            lblTotalRegistros.setText(lblTotalRegistros.getText() + "*");
+        }
     }
 }

@@ -6,7 +6,8 @@ package model.entidades;
  */
 public class Apartamento {
     private int id;
-    private int numero;
+    private String numero;
+    private int ramal;
     private CategoriaApartamento categoria;
 
     public int getId() {
@@ -17,11 +18,11 @@ public class Apartamento {
         this.id = id;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
@@ -32,4 +33,14 @@ public class Apartamento {
     public void setCategoria(CategoriaApartamento categoria) {
         this.categoria = categoria;
     }
+
+    public int getRamal() {
+        return ramal;
+    }
+
+    public void setRamal(int ramal) {
+        this.ramal = ramal;
+    }
+    
+    
 }

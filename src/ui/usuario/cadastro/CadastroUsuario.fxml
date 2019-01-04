@@ -99,7 +99,7 @@
             </HBox>
             <HBox prefHeight="50.0" prefWidth="709.0" spacing="10.0">
                <children>
-                  <JFXTextField fx:id="txtId" labelFloat="true" prefWidth="80.0" promptText="Id">
+                  <JFXTextField fx:id="txtId" editable="false" labelFloat="true" prefWidth="80.0" promptText="Id">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -229,7 +229,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <TextField fx:id="txtRegistroAtual" alignment="CENTER_RIGHT" prefWidth="48.0" text="1">
+                  <TextField fx:id="txtRegistroAtual" alignment="CENTER_RIGHT" editable="false" prefWidth="48.0" text="1">
                      <font>
                         <Font name="Arial" size="18.0" />
                      </font>

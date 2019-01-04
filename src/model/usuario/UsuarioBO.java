@@ -5,10 +5,14 @@
  */
 package model.usuario;
 
+import exceptions.UsuarioExistenteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import model.entidades.Funcao;
 import model.entidades.Usuario;
+import model.funcao.FuncaoDAO;
+import util.Mensagem;
 
 /**
  *
@@ -25,7 +29,33 @@ public class UsuarioBO {
         dao.salvar(u);
     }
     
-    public ArrayList<Funcao> listarFuncaoCrescente() throws SQLException {
+    public ObservableList<Funcao> listarFuncaoCrescente() throws SQLException {
         return dao.listarFuncaoCrescente();
+    }
+    
+    public void excluir(Usuario u) throws SQLException {
+        dao.excluir(u);
+    }
+    
+    public ArrayList<Usuario> listar() throws SQLException {
+        return dao.listar();
+    }
+    
+    public void editar(Usuario u) throws SQLException, UsuarioExistenteException {
+        Usuario aux = dao.buscarPeloCpf(u.getCpf());
+        
+        if (aux == null || aux.getIdUsuario() == u.getIdUsuario()) {
+            dao.editar(u);
+        } else {
+            throw new UsuarioExistenteException();
+        }
+    }
+    
+    public ArrayList<Usuario> filtrarPeloCpf(String cpf) throws SQLException {
+        return dao.filtrarPeloCpf(cpf);
+    }
+    
+    public ArrayList<Usuario> filtrarPeloNome(String nome) throws SQLException {
+        return dao.filtrarPorNome(nome);
     }
 }

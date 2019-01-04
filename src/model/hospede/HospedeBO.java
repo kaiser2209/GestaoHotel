@@ -53,4 +53,8 @@ public class HospedeBO {
     public ArrayList<Hospede> listarPorNome(String nome) throws SQLException {
         return dao.filtrarPorNome(nome);
     }
+    
+    public Hospede buscarPeloCpf(String cpf) throws SQLException {
+        return dao.buscarPeloCpf(cpf);
+    }
 }

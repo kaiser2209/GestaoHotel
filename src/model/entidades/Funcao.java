@@ -47,5 +47,18 @@ public class Funcao {
         this.nivelAcesso = nivelAcesso;
     }
     
+    @Override
+    public String toString() {
+        return this.nomeFuncao;
+    }
     
+    @Override
+    public boolean equals(Object outro) {
+        if (outro instanceof Funcao) {
+            return this.id == ((Funcao) outro).id;
+        }
+        
+        return false;
+    }
+
 }

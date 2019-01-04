@@ -8,9 +8,13 @@ package ui.usuario.cadastro;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
+import exceptions.UsuarioExistenteException;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,10 +22,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionModel;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.entidades.Funcao;
 import model.entidades.Usuario;
 import model.usuario.UsuarioBO;
@@ -105,49 +118,167 @@ public class CadastroUsuarioController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         uBO = new UsuarioBO();
-        ObservableList<Funcao> funcoes = FXCollections.observableArrayList();
-        cboFuncao.setItems(funcoes);
-
+        try {
+            cboFuncao.setItems(uBO.listarFuncaoCrescente());
+        } catch (SQLException ex) {
+            Mensagem.mensagemDeErroBD();
+        }
+        regAtual = 0;
+        carregarDados();
+        estadoDoRegistro();
+        atualizarNumeroRegistro();
     }    
 
     @FXML
     private void novoRegistro(ActionEvent event) {
+        acao = INCLUSAO;
+        limparCampos();
+        estadoDoRegistro();
     }
 
     @FXML
     private void editarRegistro(ActionEvent event) {
+        acao = EDICAO;
+        estadoDoRegistro();
     }
 
     @FXML
     private void apagarRegistro(ActionEvent event) {
+        Optional<ButtonType> op = Mensagem.mensagemDeConfirmacao("Deseja excluir?", "Exclusão");
+        if (op.get() == ButtonType.OK) {
+            try {
+                uBO.excluir(usuarios.get(regAtual));
+            } catch (SQLException ex) {
+                Mensagem.mensagemDeErroBD();
+            }
+            if (regAtual >= usuarios.size() - 1) {
+                regAtual--;
+            }
+        }
+        atualizarDados();
     }
 
     @FXML
     private void cancelarRegistro(ActionEvent event) {
+        acao = SEM_ACAO;
+        atualizarDados();
     }
 
     @FXML
     private void salvarRegistro(ActionEvent event) {
+        Usuario u = new Usuario();
+        u.setNome(txtNome.getText());
+        u.setEndRua(txtRua.getText());
+        u.setEndNumero(txtNumero.getText());
+        u.setEndBairro(txtBairro.getText());
+        u.setEndComplemento(txtComplemento.getText());
+        u.setEndCidade(txtCidade.getText());
+        u.setEndCep(txtCep.getText());
+        u.setEndEstado(txtEstado.getText());
+        u.setEndPais(txtPais.getText());
+        u.setTelefone(txtTelefone.getText());
+        u.setCelular(txtCelular.getText());
+        u.setEmail(txtEmail.getText());
+        u.setRg(txtRg.getText());
+        u.setCpf(txtCpf.getText());
+        u.setDataNascimento(dtDataNascimento.getValue());
+        u.setFuncao(cboFuncao.getValue());
+        
+        try {
+            if (acao == EDICAO) {
+                u.setIdUsuario(Integer.parseInt(txtId.getText()));
+                u.setDataCadastro(usuarios.get(regAtual).getDataCadastro());
+                uBO.editar(u);
+            } else if (acao == INCLUSAO) {
+                u.setDataCadastro(LocalDateTime.now());
+                uBO.salvar(u);
+
+                regAtual = usuarios.size();
+            }
+            acao = SEM_ACAO;
+            atualizarDados();
+        } catch (SQLException e) {
+            Mensagem.mensagemDeErroBD();
+            e.printStackTrace();
+        } catch (UsuarioExistenteException e1) {
+            Mensagem.mensagemDeErro("Já existe um Usuário cadastrado com este CPF!");
+            e1.printStackTrace();
+        }
     }
 
     @FXML
-    private void buscarDados(ActionEvent event) {
+    private void buscarDados(ActionEvent event) throws IOException {
+        if (filtroAtivo) {
+            filtroAtivo = false;
+            regAtual = 0;
+            carregarDados();
+            preencherCampos();
+            estadoDosBotoes();
+            atualizarNumeroRegistro();
+        } else {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/usuario/cadastro/BuscaUsuario.fxml"));
+            Parent root = loader.load();
+            Scene cena = new Scene(root);
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setResizable(false);
+            stage.setTitle("Pesquisar Hóspede");
+            stage.setScene(cena);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            BuscaUsuarioController controller = (BuscaUsuarioController) loader.getController();
+            stage.showAndWait();
+            if (controller.get() == BuscaUsuarioController.BUSCA_OK) {
+                String campo = controller.getCampo();
+                String valor = controller.getTextoBusca();
+                ArrayList<Usuario> lista = new ArrayList<>();
+                try {
+                    if (campo.equals("CPF")) {
+                        lista = uBO.filtrarPeloCpf(valor);
+
+                    } else if (campo.equals("Nome")) {
+                        lista = uBO.filtrarPeloNome(valor);
+                    }
+                    if (lista.size() > 0) {
+                        usuarios = lista;
+                        regAtual = 0;
+                        filtroAtivo = true;
+                        limparCampos();
+                        preencherCampos();
+                        atualizarEstadoRegistro();
+                        atualizarNumeroRegistro();
+                    } else {
+                        Mensagem.mensagemDeErro("Não foram encontrados registros com o critério informado!");
+                    }
+
+                } catch (SQLException e) {
+                    Mensagem.mensagemDeErroBD();
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @FXML
     private void primeiroRegistro(ActionEvent event) {
+        regAtual = 0;
+        recarregarDados();
     }
 
     @FXML
     private void registroAnterior(ActionEvent event) {
+        regAtual--;
+        recarregarDados();
     }
 
     @FXML
     private void proximoRegistro(ActionEvent event) {
+        regAtual++;
+        recarregarDados();
     }
 
     @FXML
     private void ultimoRegistro(ActionEvent event) {
+        regAtual = usuarios.size() - 1;
+        recarregarDados();
     }
     
     private void limparCampos() {
@@ -185,11 +316,11 @@ public class CadastroUsuarioController implements Initializable {
         txtTelefone.setEditable(acao != SEM_ACAO);
         txtCelular.setEditable(acao != SEM_ACAO);
         txtEmail.setEditable(acao != SEM_ACAO);
+        cboFuncao.setDisable(acao == SEM_ACAO);
         dtDataNascimento.setDisable(acao == SEM_ACAO);
-        txtId.setEditable(acao == SEM_ACAO);
     }
     
-    private void estadoBotoes() {
+    private void estadoDosBotoes() {
         btnNovo.setDisable(acao != SEM_ACAO);
         btnEditar.setDisable(acao != SEM_ACAO || usuarios.isEmpty());
         btnExcluir.setDisable(acao != SEM_ACAO || usuarios.isEmpty());
@@ -208,11 +339,7 @@ public class CadastroUsuarioController implements Initializable {
     }
     
     private void preencherCampos() {
-        txtRegistroAtual.setText(String.valueOf(regAtual + 1));
-        lblTotalRegistros.setText("/" + String.valueOf(usuarios.size()));
-        if (filtroAtivo) {
-            lblTotalRegistros.setText(lblTotalRegistros.getText() + "*");
-        }
+     
         if (usuarios.size() > 0) {
             Usuario u = usuarios.get(regAtual);
             txtId.setText(String.valueOf(u.getIdUsuario()));
@@ -231,7 +358,48 @@ public class CadastroUsuarioController implements Initializable {
             txtCelular.setText(u.getCelular());
             txtEmail.setText(u.getEmail());
             dtDataNascimento.setValue(u.getDataNascimento());
+            cboFuncao.setValue(u.getFuncao());
         }
     }
     
+    private void atualizarNumeroRegistro() {
+        txtRegistroAtual.setText(String.valueOf(regAtual + 1));
+        lblTotalRegistros.setText("/" + String.valueOf(usuarios.size()));
+        if (filtroAtivo) {
+            lblTotalRegistros.setText(lblTotalRegistros.getText() + "*");
+        }
+    }
+    
+    private void recarregarDados() {
+        preencherCampos();
+        estadoDosBotoes();
+        atualizarNumeroRegistro();
+    } 
+    
+    private void estadoDoRegistro() {
+        estadoDosBotoes();
+        estadoDosCampos();
+    }
+    
+    private void atualizarDados() {
+        carregarDados();
+        estadoDoRegistro();
+        
+    }
+    
+    private void carregarDados() {
+        try {
+            usuarios = uBO.listar();
+        } catch (SQLException ex) {
+            Mensagem.mensagemDeErroBD();
+            ex.printStackTrace();
+        }
+        
+        preencherCampos();
+    }
+    
+    private void atualizarEstadoRegistro() {
+        estadoDosCampos();
+        estadoDosBotoes();
+    }
 }

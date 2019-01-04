@@ -75,5 +75,41 @@ public class MainController implements Initializable {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
+
+    @FXML
+    private void cadastroCategoriaApartamento(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/categoria_ap/cadastro/CategoriaApartamentos.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Cadastro de Categorias para Apartamento");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    @FXML
+    private void cadastroApartamento(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/apartamento/cadastro/CadastroApartamentos.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Cadastro de Apartamento");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    @FXML
+    private void registroReserva(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/hospedagem/reserva/TelaReserva.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Cadastro de Apartamento");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
     
 }

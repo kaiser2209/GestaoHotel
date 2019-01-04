@@ -14,11 +14,19 @@
               <MenuItem mnemonicParsing="false" onAction="#cadastroCliente" text="Hóspede" />
                   <MenuItem mnemonicParsing="false" onAction="#cadastroUsuario" text="Usuário" />
                   <MenuItem mnemonicParsing="false" onAction="#cadastroFuncao" text="Função" />
+                  <Menu mnemonicParsing="false" text="Apartamento">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#cadastroCategoriaApartamento" text="Categoria" />
+                        <MenuItem mnemonicParsing="false" onAction="#cadastroApartamento" text="Apartamento" />
+                    </items>
+                  </Menu>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Hospedagem">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="Check In" />
+                  <MenuItem mnemonicParsing="false" text="Check Out" />
+                  <MenuItem mnemonicParsing="false" onAction="#registroReserva" text="Reserva" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Ajuda">

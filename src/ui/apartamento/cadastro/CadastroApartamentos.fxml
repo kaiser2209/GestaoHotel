@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -13,9 +13,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospede.cadastro.CadastroHospedeController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.apartamento.cadastro.CadastroApartamentosController">
    <center>
-      <VBox prefWidth="800.0" spacing="15.0" BorderPane.alignment="CENTER">
+      <VBox prefWidth="720.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
          <children>
             <HBox spacing="10.0">
                <children>
@@ -97,120 +101,34 @@
                </padding>
             </HBox>
             <HBox spacing="10.0">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
                <children>
-                  <JFXTextField fx:id="txtId" editable="false" labelFloat="true" prefHeight="26.0" prefWidth="80.0" promptText="Id">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtNome" focusColor="#1c47eb" labelFloat="true" prefHeight="26.0" prefWidth="300.0" promptText="Nome">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtRg" labelFloat="true" prefHeight="26.0" prefWidth="193.0" promptText="RG">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCpf" labelFloat="true" prefHeight="26.0" prefWidth="187.0" promptText="CPF">
+                  <JFXTextField fx:id="txtId" editable="false" labelFloat="true" prefWidth="80.0" promptText="Id">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextField>
                </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <JFXTextField fx:id="txtCep" labelFloat="true" prefHeight="26.0" prefWidth="179.0" promptText="CEP">
+                  <JFXTextField fx:id="txtNumero" labelFloat="true" prefWidth="100.0" promptText="Número">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="txtRua" labelFloat="true" prefHeight="26.0" prefWidth="303.0" promptText="Endereço">
+                  <JFXTextField fx:id="txtRamal" labelFloat="true" prefWidth="120.0" promptText="Ramal">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="txtNumero" labelFloat="true" prefHeight="26.0" prefWidth="107.0" promptText="Numero">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtBairro" labelFloat="true" prefHeight="26.0" prefWidth="158.0" promptText="Bairro">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
+                  <JFXComboBox fx:id="cboCategoria" labelFloat="true" promptText="Categoria" />
                </children>
-               <padding>
+               <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox spacing="10.0">
-               <children>
-                  <JFXTextField fx:id="txtComplemento" labelFloat="true" prefHeight="26.0" prefWidth="181.0" promptText="Complemento">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCidade" labelFloat="true" prefHeight="26.0" prefWidth="202.0" promptText="Cidade">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtEstado" labelFloat="true" prefHeight="26.0" prefWidth="109.0" promptText="Estado">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtPais" labelFloat="true" prefHeight="26.0" prefWidth="210.0" promptText="País">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox spacing="10.0">
-               <children>
-                  <JFXTextField fx:id="txtTelefone" labelFloat="true" prefHeight="26.0" prefWidth="150.0" promptText="Telefone">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtCelular" labelFloat="true" prefHeight="26.0" prefWidth="150.0" promptText="Celular(SMS)">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-                  <JFXTextField fx:id="txtEmail" labelFloat="true" prefHeight="26.0" prefWidth="240.0" promptText="E-mail">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </JFXTextField>
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <Label fx:id="lblDataNascimento" text="Data de Nascimento:">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </Label>
-                  <JFXDatePicker fx:id="dtDataNascimento" stylesheets="@../../../estilo/estilo.css" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
@@ -232,7 +150,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <TextField fx:id="txtRegistroAtual" alignment="CENTER_RIGHT" prefWidth="48.0" text="1">
+                  <TextField fx:id="txtRegistroAtual" alignment="CENTER_RIGHT" editable="false" prefWidth="48.0" text="1">
                      <font>
                         <Font name="Arial" size="18.0" />
                      </font>
@@ -261,9 +179,6 @@
                      </graphic>
                   </Button>
                </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
             </HBox>
          </children>
       </VBox>
