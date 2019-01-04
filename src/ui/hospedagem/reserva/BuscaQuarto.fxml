@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -19,13 +18,7 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </JFXTextField>
-            <TableView>
-              <columns>
-                <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Quarto" />
-                <TableColumn maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="Categoria" />
-                  <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Valor" />
-              </columns>
-            </TableView>
+            <TableView fx:id="tabelaQuartos" prefWidth="400.0" />
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#buscaOk" text="OK">

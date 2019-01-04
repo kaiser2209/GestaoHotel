@@ -42,5 +42,11 @@ public class Apartamento {
         this.ramal = ramal;
     }
     
+    public float getDiaria() {
+        return this.categoria.getValorDiaria();
+    }
     
+    public String getNomeCategoria() {
+        return this.categoria.getNomeCategoria();
+    }
 }
