@@ -152,4 +152,28 @@ public class ApartamentoDAO {
         CategoriaApartamentoDAO caDAO = new CategoriaApartamentoDAO();
         return caDAO.buscarPeloId(id);
     }
+    
+    public Apartamento buscarPeloId(int id) throws SQLException {
+        String sql = "SELECT * From quartos WHERE id = ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setInt(1, id);
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        Apartamento a = null;
+        if (rs.next()) {
+            a = new Apartamento();
+            a.setId(rs.getInt("id"));
+            a.setNumero(rs.getString("numero"));
+            a.setRamal(rs.getInt("ramal"));
+            a.setCategoria(buscarCategoriaPeloId(rs.getInt("categoria")));
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return a;
+    }
 }

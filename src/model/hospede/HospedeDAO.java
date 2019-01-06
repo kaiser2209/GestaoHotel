@@ -99,9 +99,10 @@ public class HospedeDAO {
         
         ResultSet resultado = stmt.executeQuery();
         
-        Hospede h = new Hospede();
+        Hospede h = null;
         
         if (resultado.next()) {
+            h = new Hospede();
             h.setIdHospede(resultado.getInt("id"));
             h.setNome(resultado.getString("nome"));
             h.setEndRua(resultado.getString("end_rua"));
@@ -218,5 +219,44 @@ public class HospedeDAO {
         ArrayList<Hospede> lista = new ArrayList<>();
         lista.add(buscarPeloCpf(pesquisa));
         return lista;
+    }
+    
+    public Hospede buscarPeloId(int id) throws SQLException {
+        String sql = "SELECT * From clientes WHERE id = ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setInt(1, id);
+        
+        ResultSet resultado = stmt.executeQuery();
+        
+        Hospede h = null;
+        
+        if (resultado.next()) {
+            h = new Hospede();
+            h.setIdHospede(resultado.getInt("id"));
+            h.setNome(resultado.getString("nome"));
+            h.setEndRua(resultado.getString("end_rua"));
+            h.setEndNumero(resultado.getString("end_numero"));
+            h.setEndBairro(resultado.getString("end_bairro"));
+            h.setEndComplemento(resultado.getString("end_complemento"));
+            h.setEndCidade(resultado.getString("end_cidade"));
+            h.setEndEstado(resultado.getString("end_estado"));
+            h.setEndCep(resultado.getString("end_cep"));
+            h.setEndPais(resultado.getString("end_pais"));
+            h.setRg(resultado.getString("rg"));
+            h.setCpf(resultado.getString("cpf"));
+            h.setEmail(resultado.getString("email"));
+            h.setTelefone(resultado.getString("telefone"));
+            h.setCelular(resultado.getString("celular"));
+            h.setDataNascimento(resultado.getDate("data_nascimento").toLocalDate());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            h.setDataCadastro(LocalDateTime.parse(resultado.getTimestamp("data_cadastro").toString(), formatter));
+        }
+        
+        resultado.close();
+        stmt.close();
+        
+        return h;
     }
 }

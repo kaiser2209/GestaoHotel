@@ -9,16 +9,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.reserva.BuscaQuartoController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.reserva.BuscaHospedeController">
    <center>
       <VBox prefHeight="300.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <JFXTextField fx:id="txtQuarto" labelFloat="true" maxWidth="120.0" onInputMethodTextChanged="#aplicarFiltro" promptText="Número do Quarto" VBox.vgrow="NEVER">
+            <JFXTextField fx:id="txtHospede" labelFloat="true" maxWidth="250.0" onInputMethodTextChanged="#aplicarFiltro" promptText="Nome do Hóspede" VBox.vgrow="NEVER">
                <font>
                   <Font name="Arial" size="14.0" />
                </font>
             </JFXTextField>
-            <TableView fx:id="tabelaQuartos" prefWidth="400.0" />
+            <TableView fx:id="tabelaHospede" prefWidth="400.0" />
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#buscaOk" text="OK">

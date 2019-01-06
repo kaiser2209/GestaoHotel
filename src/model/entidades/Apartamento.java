@@ -1,5 +1,7 @@
 package model.entidades;
 
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Charles
@@ -42,8 +44,9 @@ public class Apartamento {
         this.ramal = ramal;
     }
     
-    public float getDiaria() {
-        return this.categoria.getValorDiaria();
+    public String getDiaria() {
+        DecimalFormat df = new DecimalFormat("R$ #0.00");
+        return df.format(this.categoria.getValorDiaria());
     }
     
     public String getNomeCategoria() {

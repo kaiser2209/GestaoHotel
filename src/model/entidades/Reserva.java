@@ -6,6 +6,7 @@
 package model.entidades;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -15,9 +16,11 @@ public class Reserva {
     private int id;
     private Hospede hospede;
     private Apartamento apartamento;
-    private LocalDate dataReserva;
+    private LocalDateTime dataReserva;
     private LocalDate dataEntrada;
-    private int diasEstadia;
+    private LocalDate dataSaida;
+    private String observacoes;
+    private boolean reservaCancelada;
 
     public int getId() {
         return id;
@@ -43,11 +46,11 @@ public class Reserva {
         this.apartamento = apartamento;
     }
 
-    public LocalDate getDataReserva() {
+    public LocalDateTime getDataReserva() {
         return dataReserva;
     }
 
-    public void setDataReserva(LocalDate dataReserva) {
+    public void setDataReserva(LocalDateTime dataReserva) {
         this.dataReserva = dataReserva;
     }
 
@@ -59,12 +62,28 @@ public class Reserva {
         this.dataEntrada = dataEntrada;
     }
 
-    public int getDiasEstadia() {
-        return diasEstadia;
+    public LocalDate getDataSaida() {
+        return dataSaida;
     }
 
-    public void setDiasEstadia(int diasEstadia) {
-        this.diasEstadia = diasEstadia;
+    public void setDataSaida(LocalDate dataSaida) {
+        this.dataSaida = dataSaida;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public boolean isReservaCancelada() {
+        return reservaCancelada;
+    }
+
+    public void setReservaCancelada(boolean reservaCancelada) {
+        this.reservaCancelada = reservaCancelada;
     }
     
     

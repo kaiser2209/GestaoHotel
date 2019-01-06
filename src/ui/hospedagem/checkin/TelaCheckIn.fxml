@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXDatePicker?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -14,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.reserva.TelaReservaController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.checkin.TelaCheckInController">
    <center>
       <VBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -34,7 +31,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <JFXTextField fx:id="txtHospede" editable="false" labelFloat="true" prefWidth="230.0" promptText="Hóspede">
+                  <JFXTextField fx:id="txtHospede" editable="false" labelFloat="true" prefWidth="290.0" promptText="Hóspede">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -44,28 +41,26 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox spacing="10.0">
                <children>
-                  <Label text="Data de Entrada">
+                  <JFXTextField fx:id="txtCelular" editable="false" labelFloat="true" promptText="Celular">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
-                  </Label>
-                  <JFXDatePicker fx:id="dtDataEntrada" prefWidth="160.0" />
-                  <Label text="Previsão de Saída">
+                  </JFXTextField>
+                  <JFXTextField fx:id="txtEmail" editable="false" labelFloat="true" prefWidth="300.0" promptText="E-mail">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
-                  </Label>
-                  <JFXDatePicker fx:id="dtPrevisaoSaida" prefWidth="160.0" />
+                  </JFXTextField>
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox spacing="10.0">
                <children>
-                  <JFXTextField fx:id="txtQuarto" editable="false" labelFloat="true" prefWidth="80.0" promptText="Quarto">
+                  <JFXTextField fx:id="txtQuarto" editable="false" labelFloat="true" prefWidth="100.0" text="Quarto">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
@@ -79,23 +74,79 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <JFXCheckBox fx:id="chkIgnorarQuarto" text="Ignorar Quarto">
+                  <JFXTextField fx:id="txtCategoria" editable="false" labelFloat="true" prefWidth="200.0" promptText="Categoria">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
-                  </JFXCheckBox>
+                  </JFXTextField>
+                  <JFXTextField fx:id="txtRamal" editable="false" labelFloat="true" prefWidth="100.0" promptText="Ramal">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                  </JFXTextField>
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </HBox>
+            <VBox>
+               <children>
+                  <TableView fx:id="tabelaHospedes" prefHeight="140.0" prefWidth="480.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </TableView>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#adicionarHospede" text="Adicionar Hóspede">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../imagens/user_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#removerHospede" text="Remover Hóspede">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../imagens/user_remove.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <JFXTextField labelFloat="true" prefWidth="100.0" promptText="Valor Diária">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font>
+                        </JFXTextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
             <HBox spacing="10.0">
                <children>
-                  <JFXTextArea fx:id="txtObservacoes" labelFloat="true" prefColumnCount="30" prefRowCount="5" promptText="Observações">
+                  <JFXTextField fx:id="txtProcedencia" labelFloat="true" prefWidth="225.0" promptText="Procedência">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
-                  </JFXTextArea>
+                  </JFXTextField>
+                  <JFXTextField fx:id="txtDestino" labelFloat="true" prefWidth="225.0" promptText="Destino">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                  </JFXTextField>
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -103,7 +154,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#salvarReserva" prefWidth="160.0" text="SALVAR">
+                  <Button mnemonicParsing="false" onAction="#salvarHospedagem" prefWidth="160.0" text="SALVAR">
                      <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -115,7 +166,7 @@
                         <Font name="Arial Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#cancelarReserva" prefWidth="160.0" text="CANCELAR">
+                  <Button mnemonicParsing="false" onAction="#cancelarHospedagem" prefWidth="160.0" text="CANCELAR">
                      <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -133,9 +184,9 @@
                </VBox.margin>
             </HBox>
          </children>
-         <BorderPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
-         </BorderPane.margin>
       </VBox>
    </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </BorderPane>

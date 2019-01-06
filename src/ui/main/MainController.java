@@ -111,5 +111,17 @@ public class MainController implements Initializable {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
+
+    @FXML
+    private void abrirCheckin(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/hospedagem/checkin/TelaCheckIn.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Check-In");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
     
 }

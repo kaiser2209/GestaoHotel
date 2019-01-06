@@ -24,7 +24,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Hospedagem">
             <items>
-              <MenuItem mnemonicParsing="false" text="Check In" />
+              <MenuItem mnemonicParsing="false" onAction="#abrirCheckin" text="Check In" />
                   <MenuItem mnemonicParsing="false" text="Check Out" />
                   <MenuItem mnemonicParsing="false" onAction="#registroReserva" text="Reserva" />
             </items>

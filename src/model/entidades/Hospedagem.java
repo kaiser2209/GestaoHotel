@@ -18,7 +18,8 @@ public class Hospedagem {
     private Apartamento apartamento;
     private LocalDate dataEntrada;
     private LocalDate dataSaida;
-    private float valor;
+    private String procedencia;
+    private String destino;
 
     public int getId() {
         return id;
@@ -58,14 +59,22 @@ public class Hospedagem {
 
     public void setDataSaida(LocalDate dataSaida) {
         this.dataSaida = dataSaida;
+    } 
+
+    public String getProcedencia() {
+        return procedencia;
     }
 
-    public float getValor() {
-        return valor;
+    public void setProcedencia(String procedencia) {
+        this.procedencia = procedencia;
     }
 
-    public void setValor(float valor) {
-        this.valor = valor;
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
     }
     
     

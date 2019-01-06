@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui.hospedagem.reserva;
+package ui.hospedagem.checkin;
 
+import com.jfoenix.controls.JFXDatePicker;
+import ui.hospedagem.reserva.*;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.sql.SQLException;
@@ -42,14 +44,16 @@ public class BuscaQuartoController implements Initializable {
     private ObservableList<Apartamento> dadosTabela;
     private ApartamentoBO aBO;
     private Apartamento quartoSelecionado;
-    private LocalDate dataEntradaEscolhida;
-    private LocalDate dataSaidaEscolhida;
+    private LocalDate dataEntrada;
+    private LocalDate dataSaida;
     private ReservaBO rBO;
     
     @FXML
     private JFXTextField txtQuarto;
     @FXML
     private TableView<Apartamento> tabelaQuartos;
+    @FXML
+    private JFXDatePicker dtPrevisaoSaida;
 
     
     /**
@@ -60,9 +64,10 @@ public class BuscaQuartoController implements Initializable {
         // TODO
         aBO = new ApartamentoBO();
         rBO = new ReservaBO();
+        dataEntrada = LocalDate.now();
+        dataSaida = LocalDate.now().plusDays(10);
         try {
-            //apartamentos = aBO.listar();
-            apartamentos = rBO.buscarQuartosDisponiveis(TelaReservaController.dataEntrada, TelaReservaController.dataSaida);
+            apartamentos = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
             filtroApartamentos = filtrarDados(txtQuarto.getText());
         } catch (SQLException ex) {
             Mensagem.mensagemDeErroBD();
@@ -140,6 +145,25 @@ public class BuscaQuartoController implements Initializable {
             }
             
         });
+        
+        dtPrevisaoSaida.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                if (newValue == null) {
+                    dataSaida = LocalDate.now().plusDays(10);
+                } else {
+                    dataSaida = newValue;
+                }
+                try {
+                    apartamentos = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
+                    filtroApartamentos = filtrarDados(txtQuarto.getText());
+                    carregarDados();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BuscaQuartoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        });
     }
     
     public Apartamento get() {
@@ -149,13 +173,5 @@ public class BuscaQuartoController implements Initializable {
     private void close(Button button) {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
-    }
-    
-    public void setDataEntrada(LocalDate dataEntrada) {
-        dataEntradaEscolhida = dataEntrada;
-    }
-    
-    public void setDataSaida(LocalDate dataSaida) {
-        dataSaidaEscolhida = dataSaida;
     }
 }
