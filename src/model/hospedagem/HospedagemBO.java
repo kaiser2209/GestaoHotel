@@ -34,4 +34,9 @@ public class HospedagemBO {
             throws SQLException {
         return dao.buscarQuartosDisponiveis(dataEntrada);
     }
+    
+    public Hospedagem buscarHospedagem(Apartamento a, LocalDate dataEntrada)
+            throws SQLException {
+        return dao.buscarHospedagem(a, dataEntrada);
+    }
 }

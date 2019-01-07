@@ -194,4 +194,6 @@ public class HospedagemDAO {
         
         return quartosDisponiveis;
     }
+
+    
 }

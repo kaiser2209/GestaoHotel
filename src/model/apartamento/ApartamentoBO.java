@@ -62,4 +62,8 @@ public class ApartamentoBO {
     public Apartamento buscarPeloNumero(String numero) throws SQLException {
         return dao.buscarPeloNumero(numero);
     }
+    
+    public ArrayList<Apartamento> listarCrescente() throws SQLException {
+        return dao.listarCrescente();
+    }
 }

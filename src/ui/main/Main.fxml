@@ -24,6 +24,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Hospedagem">
             <items>
+                  <MenuItem fx:id="mnuListarQuartos" mnemonicParsing="false" onAction="#listarQuartos" text="Listar Quartos" />
               <MenuItem fx:id="mnuCheckIn" mnemonicParsing="false" onAction="#abrirCheckin" text="Check In" />
                   <MenuItem fx:id="mnuCheckOut" mnemonicParsing="false" onAction="#abrirListaHospedagens" text="Check Out" />
                   <Menu mnemonicParsing="false" text="Reserva">

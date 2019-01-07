@@ -176,4 +176,28 @@ public class ApartamentoDAO {
         
         return a;
     }
+    
+    public ArrayList<Apartamento> listarCrescente() throws SQLException {
+        String sql = "SELECT * From quartos Order By numero";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        ArrayList<Apartamento> lista = new ArrayList<>();
+        while (rs.next()) {
+            Apartamento a = new Apartamento();
+            a.setId(rs.getInt("id"));
+            a.setNumero(rs.getString("numero"));
+            a.setRamal(rs.getInt("ramal"));
+            a.setCategoria(buscarCategoriaPeloId(rs.getInt("categoria")));
+            
+            lista.add(a);
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return lista;
+    }
 }

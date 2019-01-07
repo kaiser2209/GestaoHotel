@@ -105,4 +105,16 @@ public class Hospedagem {
         DecimalFormat df = new DecimalFormat("R$ #0.00");
         return df.format(this.diaria);
     }
+    
+    public String getNomeCategoria() {
+        return this.apartamento.getNomeCategoria();
+    }
+    
+    public String getSituacao() {
+        if (this.dataSaida == null) {
+            return "Ocupado";
+        } else {
+            return "Livre";
+        }
+    }
 }

@@ -50,6 +50,8 @@ public class MainController implements Initializable {
     private Menu mnuCadApartamento;
     @FXML
     private MenuItem mnuReservaListar;
+    @FXML
+    private MenuItem mnuListarQuartos;
 
     /**
      * Initializes the controller class.
@@ -179,6 +181,18 @@ public class MainController implements Initializable {
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setResizable(false);
         stage.setTitle("Lista de Reservas");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    @FXML
+    private void listarQuartos(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/hospedagem/listarQuartos/ListarQuartos.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Lista de Quartos");
         stage.setScene(cena);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
