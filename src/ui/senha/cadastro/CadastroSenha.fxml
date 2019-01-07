@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.senha.cadastro.CadastroSenhaController">
+   <center>
+      <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../imagens/icons8-secure-96.png" />
+               </image>
+            </ImageView>
+            <JFXTextField fx:id="txtNome" labelFloat="true" maxWidth="-Infinity" promptText="Primeiro Nome">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="txtCpf" labelFloat="true" maxWidth="-Infinity" promptText="CPF">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXPasswordField fx:id="txtSenha" labelFloat="true" maxWidth="-Infinity" promptText="Senha">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </JFXPasswordField>
+            <JFXPasswordField fx:id="txtConfirmaSenha" labelFloat="true" maxWidth="-Infinity" promptText="Confirme a Senha">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </JFXPasswordField>
+            <Button mnemonicParsing="false" onAction="#salvaSenha" text="Definir Senha">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </Button>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+</BorderPane>

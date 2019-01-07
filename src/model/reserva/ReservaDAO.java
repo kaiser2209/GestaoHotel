@@ -100,7 +100,8 @@ public class ReservaDAO {
             r.setDataEntrada(LocalDate.parse(rs.getString("data_entrada")));
             r.setDataSaida(LocalDate.parse(rs.getString("data_saida")));
             r.setObservacoes(rs.getString("observacoes"));
-            r.setDataReserva(LocalDateTime.parse(rs.getString("data_reserva")));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            r.setDataReserva(LocalDateTime.parse(rs.getTimestamp("data_reserva").toString(), formatter));
             r.setReservaCancelada(rs.getBoolean("reserva_cancelada"));
             
             lista.add(r);
@@ -114,7 +115,8 @@ public class ReservaDAO {
     
     public Reserva buscarReserva(Apartamento a, LocalDate dataEntrada,
             LocalDate dataSaida) throws SQLException {
-        String sql = "SELECT * From reserva where id_quarto = ? and ("
+        String sql = "SELECT * From reserva where id_quarto = ? and "
+                + "reserva_cancelada = 0 and ("
                 + "(data_entrada between ? and ?) or (data_saida between ?"
                 + "and ?) or (? between data_entrada and data_saida))";
         
@@ -162,5 +164,46 @@ public class ReservaDAO {
         }
         
         return quartosDisponiveis;
+    }
+    
+    public void cancelarReserva(Reserva r) throws SQLException {
+        String sql = "UPDATE reserva set reserva_cancelada = 1 where id = ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setInt(1, r.getId());
+        
+        stmt.executeUpdate();
+        
+        stmt.close();
+    }
+    
+    public ArrayList<Reserva> listarReservasAtivas() throws SQLException {
+        String sql = "SELECT * From reserva where reserva_cancelada = 0";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        ArrayList<Reserva> lista = new ArrayList<>();
+        while(rs.next()) {
+            Reserva r = new Reserva();
+            r.setId(rs.getInt("id"));
+            r.setHospede(hDao.buscarPeloId(rs.getInt("id_cliente")));
+            r.setApartamento(aDao.buscarPeloId(rs.getInt("id_quarto")));
+            r.setDataEntrada(LocalDate.parse(rs.getString("data_entrada")));
+            r.setDataSaida(LocalDate.parse(rs.getString("data_saida")));
+            r.setObservacoes(rs.getString("observacoes"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            r.setDataReserva(LocalDateTime.parse(rs.getTimestamp("data_reserva").toString(), formatter));
+            r.setReservaCancelada(rs.getBoolean("reserva_cancelada"));
+            
+            lista.add(r);
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return lista;
     }
 } 

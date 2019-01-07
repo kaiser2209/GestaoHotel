@@ -58,4 +58,16 @@ public class UsuarioBO {
     public ArrayList<Usuario> filtrarPeloNome(String nome) throws SQLException {
         return dao.filtrarPorNome(nome);
     }
+    
+    public Usuario buscarPeloCpf(String cpf) throws SQLException {
+        return dao.buscarPeloCpf(cpf);
+    }
+    
+    public void salvarSenha(Usuario u, String senha) throws SQLException {
+        dao.salvarSenha(u, senha);
+    }
+    
+    public Usuario login(String cpf, String senha) throws SQLException {
+        return dao.login(cpf, senha);
+    }
 }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import model.apartamento.ApartamentoDAO;
 import model.conexao.ConnectionFactory;
+import model.entidades.Apartamento;
 import model.entidades.Hospedagem;
 import model.entidades.Hospede;
 import model.hospede.HospedeDAO;
@@ -147,5 +148,50 @@ public class HospedagemDAO {
         stmt.close();
         
         return lista;
+    }
+    
+    public Hospedagem buscarHospedagem(Apartamento a, LocalDate dataEntrada)
+            throws SQLException {
+        
+        String sql = "SELECT * From hospedagem where id_quarto = ? and "
+                + "data_saida is null and data_entrada <= ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setInt(1, a.getId());
+        stmt.setString(2, dataEntrada.toString());
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        Hospedagem h = null;
+        if (rs.next()) {
+            h = new Hospedagem();
+            h.setId(rs.getInt("id"));
+            h.setApartamento(aDao.buscarPeloId(rs.getInt("id_quarto")));
+            h.setDataEntrada(LocalDate.parse(rs.getString("data_entrada")));
+            h.setProcedencia(rs.getString("procedencia"));
+            h.setDestino(rs.getString("destino"));
+            h.setDiaria(rs.getFloat("valor_diaria"));
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return h;
+    }
+    
+    public ArrayList<Apartamento> buscarQuartosDisponiveis(LocalDate dataEntrada)
+            throws SQLException {
+        ArrayList<Apartamento> quartos = aDao.listar();
+        ArrayList<Apartamento> quartosDisponiveis = new ArrayList<>();
+        
+        for(Apartamento a : quartos) {
+            Hospedagem r = buscarHospedagem(a, dataEntrada);
+            if (r == null) {
+                quartosDisponiveis.add(a);
+            }
+        }
+        
+        return quartosDisponiveis;
     }
 }

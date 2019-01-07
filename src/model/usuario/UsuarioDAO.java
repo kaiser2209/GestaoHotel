@@ -267,4 +267,57 @@ public class UsuarioDAO {
         
         return funcoes;
     }
+    
+    public void salvarSenha(Usuario u, String senha) throws SQLException {
+        String sql = "UPDATE usuarios SET senha = MD5(?) where id = ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setString(1, senha);
+        stmt.setInt(2, u.getIdUsuario());
+        
+        stmt.executeUpdate();
+        
+        stmt.close();
+    }
+    
+    public Usuario login(String cpf, String senha) throws SQLException {
+        String sql = "SELECT * from usuarios WHERE cpf = ? and senha = "
+                + "MD5(?)";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setString(1, cpf);
+        stmt.setString(2, senha);
+        
+        ResultSet rs = stmt.executeQuery();
+        Usuario u = null;
+        if (rs.next()) {
+            u = new Usuario();
+            u.setIdUsuario(rs.getInt("id"));
+            u.setNome(rs.getString("nome"));
+            u.setRg(rs.getString("rg"));
+            u.setCpf(rs.getString("cpf"));
+            u.setEndRua(rs.getString("end_rua"));
+            u.setEndNumero(rs.getString("end_numero"));
+            u.setEndBairro(rs.getString("end_bairro"));
+            u.setEndComplemento(rs.getString("end_complemento"));
+            u.setEndCidade(rs.getString("end_cidade"));
+            u.setEndCep(rs.getString("end_cep"));
+            u.setEndEstado(rs.getString("end_estado"));
+            u.setEndPais(rs.getString("end_pais"));
+            u.setTelefone(rs.getString("telefone"));
+            u.setCelular(rs.getString("celular"));
+            u.setEmail(rs.getString("email"));
+            u.setFuncao(buscaFuncaoPorId(rs.getInt("funcao")));
+            u.setDataNascimento(LocalDate.parse(rs.getString("data_nascimento")));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            u.setDataCadastro(LocalDateTime.parse(rs.getTimestamp("data_cadastro").toString(), formatter));
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return u;
+    }
 }

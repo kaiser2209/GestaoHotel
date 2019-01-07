@@ -47,4 +47,12 @@ public class ReservaBO {
             LocalDate dataSaida) throws SQLException {
         return dao.buscarQuartosDisponiveis(dataEntrada, dataSaida);
     }
+    
+    public void cancelarReserva(Reserva r) throws SQLException {
+        dao.cancelarReserva(r);
+    }
+    
+    public ArrayList<Reserva> listarReservasAtivas() throws SQLException {
+        return dao.listarReservasAtivas();
+    }
 }

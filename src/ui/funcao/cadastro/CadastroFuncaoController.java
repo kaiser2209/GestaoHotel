@@ -8,6 +8,7 @@ package ui.funcao.cadastro;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import exceptions.FuncaoExistenteException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -69,6 +70,9 @@ public class CadastroFuncaoController implements Initializable {
     private Button btnUltimo;
     @FXML
     private JFXComboBox<Short> cboNivelAcesso;
+    private RequiredFieldValidator campoRequerido;
+    @FXML
+    private RequiredFieldValidator valorObrigatorio;
 
     /**
      * Initializes the controller class.
@@ -76,7 +80,8 @@ public class CadastroFuncaoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        txtNome.validate();
+        inicializarValidacoes();
+        definirValidacoes();
         cboNivelAcesso.getItems().addAll((short) 0, (short) 1, (short) 2, (short) 3, (short) 4, (short) 5);
         fBO = new FuncaoBO();
         regAtual = 0;
@@ -84,6 +89,24 @@ public class CadastroFuncaoController implements Initializable {
         estadoDoRegistro();
         atualizarNumeroRegistro();
     }  
+    
+    private void inicializarValidacoes() {
+        campoRequerido = new RequiredFieldValidator();
+        campoRequerido.setMessage("Campo obrigatório");
+        
+        
+    }
+    
+    private void definirValidacoes() {
+        txtNome.setValidators(campoRequerido);
+        cboNivelAcesso.setValidators(campoRequerido);
+    }
+    
+    private boolean verificarValidacao() {
+        txtNome.validate();
+        cboNivelAcesso.validate();
+        return txtNome.validate() && cboNivelAcesso.validate();
+    }
     
     private void atualizarDados() {
         carregarDados();
@@ -159,13 +182,21 @@ public class CadastroFuncaoController implements Initializable {
             try {
                 fBO.excluir(funcoes.get(regAtual));
             } catch (SQLException ex) {
-                Mensagem.mensagemDeErroBD();
+                if (ex.getErrorCode() == 1451) {
+                    Mensagem.mensagemDeErro("Não foi possível excluir a função "
+                            + "selecionada!\nVerifique se não existe algum usuário "
+                            + "cadastrado com esta função antes de continuar.");
+                } else {
+                    Mensagem.mensagemDeErro(ex);
+                }
+                
             }
             if (regAtual >= funcoes.size() - 1) {
                 regAtual--;
             }
         }
         atualizarDados();
+        atualizarNumeroRegistro();
     }
 
     @FXML
@@ -176,27 +207,32 @@ public class CadastroFuncaoController implements Initializable {
 
     @FXML
     private void salvarRegistro(ActionEvent event) {
-        Funcao f = new Funcao();
-        f.setNomeFuncao(txtNome.getText());
-        f.setDescricaoFuncao(txtDescricao.getText());
-        f.setNivelAcesso(cboNivelAcesso.getValue());
         
-        try {
-            if (acao == EDICAO) {
-                f.setId(Integer.parseInt(txtId.getText()));
-                fBO.editar(f);
-            } else if (acao == INCLUSAO) {
+        if (verificarValidacao()) {
+            Funcao f = new Funcao();
+            f.setNomeFuncao(txtNome.getText());
+            f.setDescricaoFuncao(txtDescricao.getText());
+            f.setNivelAcesso(cboNivelAcesso.getValue());
 
-                fBO.salvar(f);
+            try {
+                if (acao == EDICAO) {
+                    f.setId(Integer.parseInt(txtId.getText()));
+                    fBO.editar(f);
+                } else if (acao == INCLUSAO) {
 
-                regAtual = funcoes.size();
+                    fBO.salvar(f);
+
+                    regAtual = funcoes.size();
+                }
+                acao = SEM_ACAO;
+                atualizarDados();
+            } catch (SQLException e) {
+                Mensagem.mensagemDeErro(e);
+            } catch (FuncaoExistenteException e1) {
+                Mensagem.mensagemDeErro("A função informada já está cadastrada!");
             }
-            acao = SEM_ACAO;
-            atualizarDados();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (FuncaoExistenteException e1) {
-            
+            Mensagem.mensagemDeErro("Registro incluído com sucesso!");
+            atualizarNumeroRegistro();
         }
     }
 

@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -65,6 +66,7 @@ public class TelaReservaController implements Initializable {
     private JFXTextArea txtObservacoes;
     @FXML
     private JFXTextField txtHospede;
+    private RequiredFieldValidator campoObrigatorio;
 
     /**
      * Initializes the controller class.
@@ -72,6 +74,8 @@ public class TelaReservaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        inicializarValidacao();
+        definirValidacao();
         hBO = new HospedeBO();
         aBO = new ApartamentoBO();
         rBO = new ReservaBO();
@@ -125,7 +129,7 @@ public class TelaReservaController implements Initializable {
         Scene cena = new Scene(root);
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setResizable(false);
-        stage.setTitle("Seleção de Quarto");
+        stage.setTitle("Seleção de Hóspede");
         stage.setScene(cena);
         stage.initModality(Modality.APPLICATION_MODAL);
         BuscaHospedeController controller = (BuscaHospedeController) loader.getController();
@@ -163,24 +167,48 @@ public class TelaReservaController implements Initializable {
 
     @FXML
     private void salvarReserva(ActionEvent event) {
-        Reserva r = new Reserva();
-        r.setHospede(hospede);
-        r.setApartamento(apartamento);
-        r.setDataEntrada(dataEntrada);
-        r.setDataSaida(dataSaida);
-        r.setObservacoes(txtObservacoes.getText());
-        r.setDataReserva(LocalDateTime.now());
-        
-        try {
-            rBO.salvar(r);
-        } catch (SQLException ex) {
-            Mensagem.mensagemDeErroBD();
-            ex.printStackTrace();
+        if (validate()) {
+            Reserva r = new Reserva();
+            r.setHospede(hospede);
+            if (!chkIgnorarQuarto.isSelected()) {
+                r.setApartamento(apartamento);
+            }
+            r.setDataEntrada(dataEntrada);
+            r.setDataSaida(dataSaida);
+            r.setObservacoes(txtObservacoes.getText());
+            r.setDataReserva(LocalDateTime.now());
+
+            try {
+                rBO.salvar(r);
+            } catch (SQLException ex) {
+                Mensagem.mensagemDeErro(ex);
+            }
+        } else {
+            Mensagem.mensagemCamposInvalidos();
         }
     }
 
     @FXML
     private void cancelarReserva(ActionEvent event) {
     }
+    
+    private void inicializarValidacao() {
+        campoObrigatorio = new RequiredFieldValidator();
+        campoObrigatorio.setMessage("Obrigatório");
+    }
+    
+    private void definirValidacao() {
+        txtCpf.setValidators(campoObrigatorio);
+        dtDataEntrada.setValidators(campoObrigatorio);
+                
+    }
+    
+    private boolean validate() {
+        txtCpf.validate();
+        dtDataEntrada.validate();
+                
+        return txtCpf.validate() && dtDataEntrada.validate();
+    }
+    
     
 }

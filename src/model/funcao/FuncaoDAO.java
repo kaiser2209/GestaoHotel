@@ -55,7 +55,7 @@ public class FuncaoDAO {
         
         stmt.setInt(1, f.getId());
         
-        stmt.executeLargeUpdate();
+        stmt.executeUpdate();
         
         stmt.close();
     }

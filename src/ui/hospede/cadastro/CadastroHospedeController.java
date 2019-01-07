@@ -7,6 +7,7 @@ package ui.hospede.cadastro;
 
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import exceptions.HospedeExistenteException;
 import java.io.IOException;
 import java.net.URL;
@@ -107,12 +108,15 @@ public class CadastroHospedeController implements Initializable {
     private Button btnProximo;
     @FXML
     private Button btnUltimo;
+    private RequiredFieldValidator campoObrigatorio;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        inicializarValidacao();
+        definirValidacao();
         hBO = new HospedeBO();
         carregarDados();
         if (hospedes.size() > 0) {
@@ -261,47 +265,53 @@ public class CadastroHospedeController implements Initializable {
 
     @FXML
     private void salvarRegistro(ActionEvent event) {
-        try {
-            Hospede h = new Hospede();
-            h.setNome(txtNome.getText());
-            h.setEndRua(txtRua.getText());
-            h.setEndNumero(txtNumero.getText());
-            h.setEndBairro(txtBairro.getText());
-            h.setEndComplemento(txtComplemento.getText());
-            h.setEndCidade(txtCidade.getText());
-            h.setEndEstado(txtEstado.getText());
-            h.setEndCep(txtCep.getText());
-            h.setEndPais(txtPais.getText());
-            h.setTelefone(txtTelefone.getText());
-            h.setCelular(txtCelular.getText());
-            h.setEmail(txtEmail.getText());
-            h.setDataNascimento(dtDataNascimento.getValue());
-            h.setCpf(txtCpf.getText());
-            h.setRg(txtRg.getText());
-            if (acao == EDICAO) {
-                Optional<ButtonType> btn = Mensagem.mensagemDeConfirmacao("Deseja salvar as alterações?", "EDITAR");
-                if (btn.get() == ButtonType.OK) {
-                    h.setIdHospede(Integer.parseInt(txtId.getText()));
-                    hBO.editar(h);
-                    hospedes.remove(regAtual);
-                    hospedes.add(regAtual, h);
+        removerEspacos();
+        if (validate()) {
+            try {
+                Hospede h = new Hospede();
+                h.setNome(txtNome.getText());
+                h.setEndRua(txtRua.getText());
+                h.setEndNumero(txtNumero.getText());
+                h.setEndBairro(txtBairro.getText());
+                h.setEndComplemento(txtComplemento.getText());
+                h.setEndCidade(txtCidade.getText());
+                h.setEndEstado(txtEstado.getText());
+                h.setEndCep(txtCep.getText());
+                h.setEndPais(txtPais.getText());
+                h.setTelefone(txtTelefone.getText());
+                h.setCelular(txtCelular.getText());
+                h.setEmail(txtEmail.getText());
+                h.setDataNascimento(dtDataNascimento.getValue());
+                h.setCpf(txtCpf.getText());
+                h.setRg(txtRg.getText());
+                if (acao == EDICAO) {
+                    Optional<ButtonType> btn = Mensagem.mensagemDeConfirmacao("Deseja salvar as alterações?", "EDITAR");
+                    if (btn.get() == ButtonType.OK) {
+                        h.setIdHospede(Integer.parseInt(txtId.getText()));
+                        hBO.editar(h);
+                        hospedes.remove(regAtual);
+                        hospedes.add(regAtual, h);
+                    }
+                } else if (acao == INCLUSAO) {
+                    h.setDataCadastro(LocalDateTime.now());
+                    hBO.salvar(h);
+                    carregarDados();
+                    if (filtroAtivo) {
+                        filtroAtivo = false;
+                    }
+                    regAtual = hospedes.size() - 1;
                 }
-            } else if (acao == INCLUSAO) {
-                h.setDataCadastro(LocalDateTime.now());
-                hBO.salvar(h);
-                carregarDados();
-                if (filtroAtivo) {
-                    filtroAtivo = false;
-                }
-                regAtual = hospedes.size() - 1;
+                acao = SEM_ACAO;
+                preencherCampos();
+                atualizarEstadoRegistro();
+            } catch (SQLException e) {
+                Mensagem.mensagemDeErro(e);
+            } catch (HospedeExistenteException e1) {
+                Mensagem.mensagemDeErro("Já existe um hóspdede cadastrado com "
+                        + "o cpf informado.");
             }
-            acao = SEM_ACAO;
-            preencherCampos();
-            atualizarEstadoRegistro();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (HospedeExistenteException e1) {
-            e1.printStackTrace();
+        } else {
+            Mensagem.mensagemCamposInvalidos();
         }
     }
 
@@ -393,5 +403,60 @@ public class CadastroHospedeController implements Initializable {
         if (filtroAtivo) {
             lblTotalRegistros.setText(lblTotalRegistros.getText() + "*");
         }
+    }
+    
+    private void inicializarValidacao() {
+        campoObrigatorio = new RequiredFieldValidator();
+        campoObrigatorio.setMessage("Obrigatório");
+    }
+    
+    private void definirValidacao() {
+        txtNome.setValidators(campoObrigatorio);
+        txtRg.setValidators(campoObrigatorio);
+        txtCpf.setValidators(campoObrigatorio);
+        txtRua.setValidators(campoObrigatorio);
+        txtBairro.setValidators(campoObrigatorio);
+        txtCidade.setValidators(campoObrigatorio);
+        txtEstado.setValidators(campoObrigatorio);
+        txtPais.setValidators(campoObrigatorio);
+        txtCep.setValidators(campoObrigatorio);
+        dtDataNascimento.setValidators(campoObrigatorio);
+        
+    }
+    
+    private boolean validate() {
+        txtNome.validate();
+        txtRg.validate();
+        txtCpf.validate();
+        txtRua.validate();
+        txtBairro.validate();
+        txtCidade.validate();
+        txtEstado.validate();
+        txtPais.validate();
+        txtCep.validate();
+        dtDataNascimento.validate();
+                
+        return txtNome.validate() && txtRg.validate() && txtCpf.validate() &&
+                txtRua.validate() && txtBairro.validate() && txtCidade.validate() &&
+                txtEstado.validate() && txtPais.validate() && dtDataNascimento.validate() &&
+                txtCep.validate();
+    }
+    
+    private void removerEspacos() {
+        
+        txtNome.setText(txtNome.getText().trim());
+        txtRua.setText(txtRua.getText().trim());
+        txtNumero.setText(txtNumero.getText().trim());
+        txtBairro.setText(txtBairro.getText().trim());
+        txtComplemento.setText(txtComplemento.getText().trim());
+        txtCidade.setText(txtCidade.getText().trim());
+        txtEstado.setText(txtEstado.getText().trim());
+        txtPais.setText(txtPais.getText().trim());
+        txtCep.setText(txtCep.getText().trim());
+        txtCpf.setText(txtCpf.getText().trim());
+        txtRg.setText(txtRg.getText().trim());
+        txtTelefone.setText(txtTelefone.getText().trim());
+        txtCelular.setText(txtCelular.getText().trim());
+        txtEmail.setText(txtEmail.getText().trim());
     }
 }

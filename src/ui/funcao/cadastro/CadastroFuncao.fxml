@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -113,6 +114,7 @@
                         <Font name="Arial" size="14.0" />
                      </font>
                   </JFXTextArea>
+                  <RequiredFieldValidator fx:id="valorObrigatorio" message="Campo Obrigatório" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">

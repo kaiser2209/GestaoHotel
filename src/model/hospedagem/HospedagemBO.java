@@ -6,6 +6,9 @@
 package model.hospedagem;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import model.entidades.Apartamento;
 import model.entidades.Hospedagem;
 
 /**
@@ -27,4 +30,8 @@ public class HospedagemBO {
         dao.checkout(h);
     }
     
+    public ArrayList<Apartamento> buscarQuartosDisponiveis(LocalDate dataEntrada)
+            throws SQLException {
+        return dao.buscarQuartosDisponiveis(dataEntrada);
+    }
 }

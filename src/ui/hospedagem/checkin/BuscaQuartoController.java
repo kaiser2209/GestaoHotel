@@ -30,6 +30,8 @@ import javafx.scene.input.InputMethodEvent;
 import javafx.stage.Stage;
 import model.apartamento.ApartamentoBO;
 import model.entidades.Apartamento;
+import model.entidades.Hospedagem;
+import model.hospedagem.HospedagemBO;
 import model.reserva.ReservaBO;
 import util.Mensagem;
 
@@ -39,6 +41,8 @@ import util.Mensagem;
  * @author guard
  */
 public class BuscaQuartoController implements Initializable {
+    private ArrayList<Apartamento> apartamentosSemReserva;
+    private ArrayList<Apartamento> apartamentosSemHospedagem;
     private ArrayList<Apartamento> apartamentos;
     private ArrayList<Apartamento> filtroApartamentos;
     private ObservableList<Apartamento> dadosTabela;
@@ -47,6 +51,7 @@ public class BuscaQuartoController implements Initializable {
     private LocalDate dataEntrada;
     private LocalDate dataSaida;
     private ReservaBO rBO;
+    private HospedagemBO hBO;
     
     @FXML
     private JFXTextField txtQuarto;
@@ -64,10 +69,13 @@ public class BuscaQuartoController implements Initializable {
         // TODO
         aBO = new ApartamentoBO();
         rBO = new ReservaBO();
+        hBO = new HospedagemBO();
         dataEntrada = LocalDate.now();
         dataSaida = LocalDate.now().plusDays(10);
         try {
-            apartamentos = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
+            apartamentosSemReserva = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
+            apartamentosSemHospedagem = hBO.buscarQuartosDisponiveis(dataEntrada);
+            apartamentos = definirApartamentosLivres();
             filtroApartamentos = filtrarDados(txtQuarto.getText());
         } catch (SQLException ex) {
             Mensagem.mensagemDeErroBD();
@@ -155,7 +163,8 @@ public class BuscaQuartoController implements Initializable {
                     dataSaida = newValue;
                 }
                 try {
-                    apartamentos = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
+                    apartamentosSemReserva = rBO.buscarQuartosDisponiveis(dataEntrada, dataSaida);
+                    apartamentos = definirApartamentosLivres();
                     filtroApartamentos = filtrarDados(txtQuarto.getText());
                     carregarDados();
                 } catch (SQLException ex) {
@@ -173,5 +182,17 @@ public class BuscaQuartoController implements Initializable {
     private void close(Button button) {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
+    }
+    
+    private ArrayList<Apartamento> definirApartamentosLivres() {
+        ArrayList<Apartamento> lista = new ArrayList<>();
+        
+        for (Apartamento a : apartamentosSemReserva) {
+            if (apartamentosSemHospedagem.contains(a)) {
+                lista.add(a);
+            }
+        }
+        
+        return lista;
     }
 }

@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,13 +30,34 @@ import model.entidades.Funcao;
  */
 public class MainController implements Initializable {
 
+    @FXML
+    private MenuItem mnuCadHospede;
+    @FXML
+    private MenuItem mnuCadUsuario;
+    @FXML
+    private MenuItem mnuCadFuncao;
+    @FXML
+    private MenuItem mnuCheckIn;
+    @FXML
+    private MenuItem mnuCheckOut;
+    @FXML
+    private MenuItem mnuReserva;
+    @FXML
+    private MenuItem mnuCadApCategoria;
+    @FXML
+    private MenuItem mnuCadApApartamento;
+    @FXML
+    private Menu mnuCadApartamento;
+    @FXML
+    private MenuItem mnuReservaListar;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+        definirAcesso();
     }    
 
     @FXML
@@ -138,4 +160,27 @@ public class MainController implements Initializable {
         stage.show();
     }
     
+    private void definirAcesso() {
+        short nivelAcesso = Main.getNivelAcesso();
+        mnuCadHospede.setVisible(nivelAcesso <= 5);
+        mnuCadUsuario.setVisible(nivelAcesso <= 1);
+        mnuCadFuncao.setVisible(nivelAcesso <= 1);
+        mnuCheckIn.setVisible(nivelAcesso <= 5);
+        mnuCheckOut.setVisible(nivelAcesso <= 5);
+        mnuReserva.setVisible(nivelAcesso <= 5);
+        mnuCadApartamento.setVisible(nivelAcesso <= 3);
+        mnuReservaListar.setVisible(nivelAcesso <= 5);
+    }
+
+    @FXML
+    private void listarReserva(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/hospedagem/reserva/ListaReserva.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Lista de Reservas");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
 }

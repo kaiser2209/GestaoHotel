@@ -8,6 +8,7 @@ package ui.categoria_ap.cadastro;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.validation.NumberValidator;
+import com.jfoenix.validation.RequiredFieldValidator;
 import exceptions.CategoriaApartamentoExistenteException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -73,13 +74,17 @@ public class CategoriaApartamentosController implements Initializable {
     private Button btnProximo;
     @FXML
     private Button btnUltimo;
-
+    private RequiredFieldValidator campoObrigatorio;
+    private NumberValidator somenteNumeros;
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        inicializarValidacao();
+        definirValidacao();
         cBO = new CategoriaApartamentoBO();
         regAtual = 0;
         carregarDados();
@@ -169,7 +174,13 @@ public class CategoriaApartamentosController implements Initializable {
             try {
                 cBO.excluir(categorias.get(regAtual));
             } catch (SQLException ex) {
-                Mensagem.mensagemDeErroBD();
+                if (ex.getErrorCode() == 1451) {
+                    Mensagem.mensagemDeErro("Não foi possível excluir a categoria "
+                            + "selecionada!\nVerifique se não existe algum apartamento "
+                            + "cadastrado com esta categoria e tente novamente!");
+                } else {
+                    Mensagem.mensagemDeErro(ex);
+                }
             }
             if (regAtual >= categorias.size() - 1) {
                 regAtual--;
@@ -187,33 +198,37 @@ public class CategoriaApartamentosController implements Initializable {
 
     @FXML
     private void salvarRegistro(ActionEvent event) {
-             
-        try {
-            CategoriaApartamento c = new CategoriaApartamento();
-            c.setCodigo(txtCodigo.getText());
-            c.setNomeCategoria(txtNome.getText());
-            c.setDescricao(txtDescricao.getText());
-            c.setValorDiaria(txtValor.getText());
-            if (acao == EDICAO) {
-                c.setId(Integer.parseInt(txtId.getText()));
-                cBO.editar(c);
-            } else if (acao == INCLUSAO) {
+        if (validate()) {
+            try {
+                CategoriaApartamento c = new CategoriaApartamento();
+                c.setCodigo(txtCodigo.getText());
+                c.setNomeCategoria(txtNome.getText());
+                c.setDescricao(txtDescricao.getText());
+                c.setValorDiaria(txtValor.getText());
+                if (acao == EDICAO) {
+                    c.setId(Integer.parseInt(txtId.getText()));
+                    cBO.editar(c);
+                } else if (acao == INCLUSAO) {
 
-                cBO.salvar(c);
+                    cBO.salvar(c);
 
-                regAtual = categorias.size();
+                    regAtual = categorias.size();
+                }
+                acao = SEM_ACAO;
+                atualizarDados();
+                atualizarNumeroRegistro();
+            } catch (SQLException e) {
+                Mensagem.mensagemDeErroBD();
+                e.printStackTrace();
+            } catch (CategoriaApartamentoExistenteException e1) {
+                Mensagem.mensagemDeErro("Já existe uma categoria cadastrada com "
+                        + "o código informado!");
+            } catch (ParseException e2) {
+                Mensagem.mensagemDeErro("O número informado não é válido!");
             }
-            acao = SEM_ACAO;
-            atualizarDados();
-            atualizarNumeroRegistro();
-        } catch (SQLException e) {
-            Mensagem.mensagemDeErroBD();
-            e.printStackTrace();
-        } catch (CategoriaApartamentoExistenteException e1) {
-            Mensagem.mensagemDeErro("Já existe uma categoria cadastrada com "
-                    + "o código informado!");
-        } catch (ParseException e2) {
-            Mensagem.mensagemDeErro("O número informado não é válido!");
+        } else {
+            Mensagem.mensagemDeErro("Não foi possível salvar os dados.\n"
+                    + "Verifique os valores digitados e tente novamente!");
         }
     }
 
@@ -252,4 +267,25 @@ public class CategoriaApartamentosController implements Initializable {
         recarregarDados();
     }
     
+    private void inicializarValidacao() {
+        campoObrigatorio = new RequiredFieldValidator();
+        campoObrigatorio.setMessage("Obrigatório");
+        somenteNumeros = new NumberValidator();
+        somenteNumeros.setMessage("Inválido");
+    }
+    
+    private void definirValidacao() {
+        txtCodigo.setValidators(campoObrigatorio);
+        txtNome.setValidators(campoObrigatorio);
+        txtValor.setValidators(campoObrigatorio, somenteNumeros);
+        
+    }
+    
+    private boolean validate() {
+        txtCodigo.validate();
+        txtNome.validate();
+        txtValor.validate();
+                
+        return txtCodigo.validate() && txtNome.validate() && txtValor.validate();
+    }
 }

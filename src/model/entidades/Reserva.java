@@ -7,6 +7,7 @@ package model.entidades;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -86,5 +87,16 @@ public class Reserva {
         this.reservaCancelada = reservaCancelada;
     }
     
+    public String getNumeroApartamento() {
+        return this.apartamento.getNumero();
+    }
     
+    public String getNomeHospede() {
+        return this.hospede.getNome();
+    }
+    
+    public String getDataEntradaFormatada() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataEntrada.format(dtf);
+    }
 }

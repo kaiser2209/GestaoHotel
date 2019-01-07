@@ -52,4 +52,13 @@ public class Apartamento {
     public String getNomeCategoria() {
         return this.categoria.getNomeCategoria();
     }
+    
+    @Override
+    public boolean equals(Object outro) {
+        if (outro instanceof Apartamento) {
+            return this.id == ((Apartamento) outro).getId();
+        }
+        
+        return false;
+    }
 }

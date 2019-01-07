@@ -6,6 +6,8 @@
 package ui.hospedagem.checkout;
 
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.NumberValidator;
+import com.jfoenix.validation.RequiredFieldValidator;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -61,6 +63,7 @@ public class TelaCheckOutController implements Initializable {
     private JFXTextField txtTotalDesconto;
     @FXML
     private JFXTextField txtAcrescimo;
+    private NumberValidator somenteNumeros;
     
 
     /**
@@ -69,6 +72,8 @@ public class TelaCheckOutController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        inicializarValidacao();
+        definirValidacao();
         hBO = new HospedagemBO();
         pBO = new PagamentoHospedagemBO();
         hospedagem = ListaHospedagemController.getHospedagemSelecionada();
@@ -96,22 +101,26 @@ public class TelaCheckOutController implements Initializable {
 
     @FXML
     private void salvarCheckOut(ActionEvent event) {
-        hospedagem.setDataSaida(LocalDate.now());
-        PagamentoHospedagem pagamento = new PagamentoHospedagem();
-        pagamento.setHospedagem(hospedagem);
-        pagamento.setTotalAcrescimo(getAcrescimo());
-        pagamento.setTotalValorDiaria(getTotalDiarias());
-        pagamento.setTotalDesconto(getDesconto());
-        
-        
-        try {
-            hBO.checkout(hospedagem);
-            pBO.salvar(pagamento);
-        } catch (SQLException ex) {
-            Mensagem.mensagemDeErro("Houve um erro ao realizar o Check Out");
+        if (validate()) {
+            hospedagem.setDataSaida(LocalDate.now());
+            PagamentoHospedagem pagamento = new PagamentoHospedagem();
+            pagamento.setHospedagem(hospedagem);
+            pagamento.setTotalAcrescimo(getAcrescimo());
+            pagamento.setTotalValorDiaria(getTotalDiarias());
+            pagamento.setTotalDesconto(getDesconto());
+
+
+            try {
+                hBO.checkout(hospedagem);
+                pBO.salvar(pagamento);
+            } catch (SQLException ex) {
+                Mensagem.mensagemDeErro("Houve um erro ao realizar o Check Out");
         }
         
         close((Button) event.getSource());
+        } else {
+            Mensagem.mensagemCamposInvalidos();
+        }
     }
 
     @FXML
@@ -194,5 +203,23 @@ public class TelaCheckOutController implements Initializable {
     private void close(Button button) {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
+    }
+    
+    private void inicializarValidacao() {
+        somenteNumeros = new NumberValidator();
+        somenteNumeros.setMessage("Valor Inválido");
+    }
+    
+    private void definirValidacao() {
+        txtPercentual.setValidators(somenteNumeros);
+        txtAcrescimo.setValidators(somenteNumeros);
+                
+    }
+    
+    private boolean validate() {
+        txtPercentual.validate();
+        txtAcrescimo.validate();
+                
+        return txtPercentual.validate() && txtAcrescimo.validate();
     }
 }

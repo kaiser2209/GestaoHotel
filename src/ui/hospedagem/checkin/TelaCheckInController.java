@@ -6,10 +6,13 @@
 package ui.hospedagem.checkin;
 
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -77,12 +80,15 @@ public class TelaCheckInController implements Initializable {
     private JFXTextField txtDestino;
     @FXML
     private JFXTextField txtDiaria;
+    private RequiredFieldValidator campoObrigatorio;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        inicializarValidacao();
+        definirValidacao();
         // TODO
         hospedes = new ArrayList<Hospede>();
         aBO = new ApartamentoBO();
@@ -168,7 +174,9 @@ public class TelaCheckInController implements Initializable {
         BuscaQuartoController controller = (BuscaQuartoController) loader.getController();
         apartamento = controller.get();
         mostrarQuartoSelecionado();
-        calcularDiaria();
+        if (apartamento != null) {
+            calcularDiaria();
+        }
     }
     
     private void mostrarQuartoSelecionado() {
@@ -218,7 +226,7 @@ public class TelaCheckInController implements Initializable {
         Scene cena = new Scene(root);
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setResizable(false);
-        stage.setTitle("Seleção de Quarto");
+        stage.setTitle("Seleção de Hóspede");
         stage.setScene(cena);
         stage.initModality(Modality.APPLICATION_MODAL);
         BuscaHospedeController controller = (BuscaHospedeController) loader.getController();
@@ -249,22 +257,28 @@ public class TelaCheckInController implements Initializable {
     }
 
     @FXML
-    private void salvarHospedagem(ActionEvent event) {
-        hospedes.add(0, hospede);
-        Hospedagem h = new Hospedagem();
-        h.setHospedes(hospedes);
-        h.setDataEntrada(LocalDate.now());
-        h.setApartamento(apartamento);
-        h.setProcedencia(txtProcedencia.getText());
-        h.setDestino(txtDestino.getText());
-        
-        try {
-            hBO.salvar(h);
-        } catch (SQLException ex) {
-            Mensagem.mensagemDeErro("Houve um erro ao salvar a hospedagem!");
-            ex.printStackTrace();
+    private void salvarHospedagem(ActionEvent event) throws ParseException {
+        if (validate()) {
+            hospedes.add(0, hospede);
+            Hospedagem h = new Hospedagem();
+            h.setHospedes(hospedes);
+            h.setDataEntrada(LocalDate.now());
+            h.setApartamento(apartamento);
+            h.setProcedencia(txtProcedencia.getText());
+            h.setDestino(txtDestino.getText());
+            NumberFormat nf = NumberFormat.getInstance();
+            h.setDiaria(nf.parse(txtDiaria.getText().replace("R$ ", "")).floatValue());
+
+            try {
+                hBO.salvar(h);
+            } catch (SQLException ex) {
+                Mensagem.mensagemDeErro(ex);
+            }
+            Mensagem.mensagem("Check In Realizado com Sucesso!");
+            close((Button) event.getSource());
+        } else {
+            Mensagem.mensagemCamposInvalidos();
         }
-        close((Button) event.getSource());
     }
 
     @FXML
@@ -301,5 +315,23 @@ public class TelaCheckInController implements Initializable {
     
     public static ArrayList<Hospede> getHospedesSelecionados() {
         return hospedesSelecionados;
+    }
+    
+    private void inicializarValidacao() {
+        campoObrigatorio = new RequiredFieldValidator();
+        campoObrigatorio.setMessage("Obrigatório");
+    }
+    
+    private void definirValidacao() {
+        txtCpf.setValidators(campoObrigatorio);
+        txtQuarto.setValidators(campoObrigatorio);
+                
+    }
+    
+    private boolean validate() {
+        txtCpf.validate();
+        txtQuarto.validate();
+                
+        return txtCpf.validate() && txtQuarto.validate();
     }
 }

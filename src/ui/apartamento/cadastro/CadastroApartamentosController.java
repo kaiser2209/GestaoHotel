@@ -7,6 +7,7 @@ package ui.apartamento.cadastro;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
 import exceptions.ApartamentoExistenteException;
 import java.io.IOException;
 import java.net.URL;
@@ -77,6 +78,7 @@ public class CadastroApartamentosController implements Initializable {
     private Button btnProximo;
     @FXML
     private Button btnUltimo;
+    private RequiredFieldValidator campoObrigatorio;
 
     /**
      * Initializes the controller class.
@@ -84,6 +86,8 @@ public class CadastroApartamentosController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        inicializarValidacao();
+        definirValidacao();
         aBO = new ApartamentoBO();
         try {
             cboCategoria.setItems(aBO.listarCategoriaCrescente());
@@ -211,28 +215,32 @@ public class CadastroApartamentosController implements Initializable {
 
     @FXML
     private void salvarRegistro(ActionEvent event) {
-        Apartamento a = new Apartamento();
-        a.setNumero(txtNumero.getText());
-        a.setRamal(Integer.parseInt(txtRamal.getText()));
-        a.setCategoria(cboCategoria.getValue());
-        
-        try {
-            if (acao == EDICAO) {
-                a.setId(Integer.parseInt(txtId.getText()));
-                aBO.editar(a);
-            } else if (acao == INCLUSAO) {
-                aBO.salvar(a);
+        if (validate()) {
+            Apartamento a = new Apartamento();
+            a.setNumero(txtNumero.getText());
+            a.setRamal(Integer.parseInt(txtRamal.getText()));
+            a.setCategoria(cboCategoria.getValue());
 
-                regAtual = apartamentos.size();
+            try {
+                if (acao == EDICAO) {
+                    a.setId(Integer.parseInt(txtId.getText()));
+                    aBO.editar(a);
+                } else if (acao == INCLUSAO) {
+                    aBO.salvar(a);
+
+                    regAtual = apartamentos.size();
+                }
+                acao = SEM_ACAO;
+                atualizarDados();
+                atualizarNumeroRegistro();
+            } catch (SQLException e) {
+                Mensagem.mensagemDeErroBD();
+                e.printStackTrace();
+            } catch (ApartamentoExistenteException e1) {
+                Mensagem.mensagemDeErro("Já existe um Apartamento cadastrado com este número!");
             }
-            acao = SEM_ACAO;
-            atualizarDados();
-            atualizarNumeroRegistro();
-        } catch (SQLException e) {
-            Mensagem.mensagemDeErroBD();
-            e.printStackTrace();
-        } catch (ApartamentoExistenteException e1) {
-            Mensagem.mensagemDeErro("Já existe um Apartamento cadastrado com este número!");
+        } else {
+            Mensagem.mensagemCamposInvalidos();
         }
     }
 
@@ -311,4 +319,23 @@ public class CadastroApartamentosController implements Initializable {
         cboCategoria.setValue(null);
     }
     
+    private void inicializarValidacao() {
+        campoObrigatorio = new RequiredFieldValidator();
+        campoObrigatorio.setMessage("Obrigatório");
+    }
+    
+    private void definirValidacao() {
+        txtNumero.setValidators(campoObrigatorio);
+        txtRamal.setValidators(campoObrigatorio);
+        cboCategoria.setValidators(campoObrigatorio);
+        
+    }
+    
+    private boolean validate() {
+        txtNumero.validate();
+        txtRamal.validate();
+        cboCategoria.validate();
+                
+        return txtNumero.validate() && txtRamal.validate() && cboCategoria.validate();
+    }
 }
