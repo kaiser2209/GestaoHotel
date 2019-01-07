@@ -9,17 +9,23 @@ import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,7 +35,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.apartamento.ApartamentoBO;
 import model.entidades.Apartamento;
+import model.entidades.Hospedagem;
 import model.entidades.Hospede;
+import model.hospedagem.HospedagemBO;
 import model.hospede.HospedeBO;
 import util.Mensagem;
 
@@ -43,7 +51,10 @@ public class TelaCheckInController implements Initializable {
     private ApartamentoBO aBO;
     private Hospede hospede;
     private Apartamento apartamento;
-    
+    private ArrayList<Hospede> hospedes;
+    private ObservableList<Hospede> dadosTabela;
+    private HospedagemBO hBO;
+    private static ArrayList<Hospede> hospedesSelecionados;
     @FXML
     private JFXTextField txtCpf;
     @FXML
@@ -64,6 +75,8 @@ public class TelaCheckInController implements Initializable {
     private JFXTextField txtProcedencia;
     @FXML
     private JFXTextField txtDestino;
+    @FXML
+    private JFXTextField txtDiaria;
 
     /**
      * Initializes the controller class.
@@ -71,7 +84,11 @@ public class TelaCheckInController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        hospedes = new ArrayList<Hospede>();
         aBO = new ApartamentoBO();
+        hBO = new HospedagemBO();
+        hospedesSelecionados = new ArrayList<>();
+        configurarTabela();
         try {
             apartamentos = aBO.listar();
         } catch (SQLException ex) {
@@ -89,9 +106,8 @@ public class TelaCheckInController implements Initializable {
             if (hospede == null) {
                 abrirBuscaHospede();
             } else {
-                txtHospede.setText(hospede.getNome());
-                txtCelular.setText(hospede.getCelular());
-                txtEmail.setText(hospede.getEmail());
+                mostrarHospedeSelecionado();
+                hospedesSelecionados.add(hospede);
             }
         } catch (SQLException e) {
             Mensagem.mensagemDeErroBD();
@@ -112,7 +128,10 @@ public class TelaCheckInController implements Initializable {
         stage.initModality(Modality.APPLICATION_MODAL);
         BuscaHospedeController controller = (BuscaHospedeController) loader.getController();
         stage.showAndWait();
-        hospede = controller.get();
+        if (controller.get() != null) {
+            hospede = controller.get();
+            hospedesSelecionados.add(hospede);
+        }
         mostrarHospedeSelecionado();
     }
     
@@ -120,6 +139,8 @@ public class TelaCheckInController implements Initializable {
         if (hospede != null) {
             txtCpf.setText(hospede.getCpf());
             txtHospede.setText(hospede.getNome());
+            txtCelular.setText(hospede.getCelular());
+            txtEmail.setText(hospede.getEmail());
         } else {
             txtCpf.clear();
             txtHospede.clear();
@@ -147,6 +168,7 @@ public class TelaCheckInController implements Initializable {
         BuscaQuartoController controller = (BuscaQuartoController) loader.getController();
         apartamento = controller.get();
         mostrarQuartoSelecionado();
+        calcularDiaria();
     }
     
     private void mostrarQuartoSelecionado() {
@@ -170,34 +192,114 @@ public class TelaCheckInController implements Initializable {
 
         //Configurar como os valores serão lidos (nome dos atributos)
         colNome.setCellValueFactory(new PropertyValueFactory<Hospede, String>("nome"));
-        colNascimento.setCellValueFactory(new PropertyValueFactory<Hospede, LocalDate>("dataNascimento"));
+        colNascimento.setCellValueFactory(new PropertyValueFactory<Hospede, LocalDate>("dataNascimentoFormatada"));
         colCelular.setCellValueFactory(new PropertyValueFactory<Hospede, String>("celular"));
 
         //Configurando a largura das colunas da tabela
         tabelaHospedes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        colNome.setMaxWidth(1f * Integer.MAX_VALUE * 15); // 20% width
-        colNascimento.setMaxWidth(1f * Integer.MAX_VALUE * 60); // 20% width
+        colNome.setMaxWidth(1f * Integer.MAX_VALUE * 50); // 20% width
+        colNascimento.setMaxWidth(1f * Integer.MAX_VALUE * 25); // 20% width
         colCelular.setMaxWidth(1f * Integer.MAX_VALUE * 25); // 20% width
 
         //Adiciona as colunas na tabela na ordem que devem aparecer
         tabelaHospedes.getColumns().addAll(colNome, colNascimento, colCelular);
 
     }
-
-    @FXML
-    private void adicionarHospede(ActionEvent event) {
+    
+    private void carregarDadosTabela() {
+        dadosTabela = FXCollections.observableArrayList(hospedes);
+        tabelaHospedes.setItems(dadosTabela);
     }
 
     @FXML
-    private void removerHospede(ActionEvent event) {
+    private void adicionarHospede(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/hospedagem/checkin/BuscaHospede.fxml"));
+        Parent root = loader.load();
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Seleção de Quarto");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        BuscaHospedeController controller = (BuscaHospedeController) loader.getController();
+        stage.showAndWait();
+        if (controller.get() != null) {
+            hospedes.add(controller.get());
+            hospedesSelecionados.add(controller.get());
+        }
+        carregarDadosTabela();
+        calcularDiaria();
+    }
+
+    @FXML
+    private void removerHospede(ActionEvent event) throws IOException {
+        Hospede h = tabelaHospedes.getSelectionModel().getSelectedItem();
+        if (h != null) {
+            Optional<ButtonType> op = Mensagem.mensagemDeConfirmacao("Deseja excluir o hóspede?", "Exclusão");
+            if (op.get() == ButtonType.OK) {
+                hospedes.remove(h);
+                hospedesSelecionados.remove(h);
+                carregarDadosTabela();
+                calcularDiaria();
+            }
+        } else {
+            Mensagem.mensagemDeErro("Selecione um hóspede primeiro e depois clique"
+                    + " em Remover Hóspede");
+        }
     }
 
     @FXML
     private void salvarHospedagem(ActionEvent event) {
+        hospedes.add(0, hospede);
+        Hospedagem h = new Hospedagem();
+        h.setHospedes(hospedes);
+        h.setDataEntrada(LocalDate.now());
+        h.setApartamento(apartamento);
+        h.setProcedencia(txtProcedencia.getText());
+        h.setDestino(txtDestino.getText());
+        
+        try {
+            hBO.salvar(h);
+        } catch (SQLException ex) {
+            Mensagem.mensagemDeErro("Houve um erro ao salvar a hospedagem!");
+            ex.printStackTrace();
+        }
+        close((Button) event.getSource());
     }
 
     @FXML
     private void cancelarHospedagem(ActionEvent event) {
+        
+        close((Button) event.getSource());
     }
     
+    private void close(Button button) {
+        Stage stage = (Stage) button.getScene().getWindow();
+        stage.close();
+    }
+    
+    private void calcularDiaria() {
+        Float diaria = apartamento.getCategoria().getValorDiaria();
+        DecimalFormat df = new DecimalFormat("R$ #.00");
+        txtDiaria.setText(df.format(diaria * acrescimoPorPessoa(hospedes.size())));
+    }
+    
+    private float acrescimoPorPessoa(int n) {
+        switch (n) {
+            case 0:
+                return 1.0f;
+            case 1:
+                return 1.8f;
+            case 2:
+                return 2.4f;
+            case 3:
+                return 3.0f;
+            default:
+                return 1.0f;
+        }
+    }
+    
+    public static ArrayList<Hospede> getHospedesSelecionados() {
+        return hospedesSelecionados;
+    }
 }

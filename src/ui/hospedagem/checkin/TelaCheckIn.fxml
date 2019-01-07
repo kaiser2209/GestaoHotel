@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.checkin.TelaCheckInController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../../estilo/estilo.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.hospedagem.checkin.TelaCheckInController">
    <center>
       <VBox spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -89,7 +89,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </HBox>
-            <VBox>
+            <VBox spacing="10.0">
                <children>
                   <TableView fx:id="tabelaHospedes" prefHeight="140.0" prefWidth="480.0">
                      <padding>
@@ -123,7 +123,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="10.0">
                      <children>
-                        <JFXTextField labelFloat="true" prefWidth="100.0" promptText="Valor Diária">
+                        <JFXTextField fx:id="txtDiaria" labelFloat="true" prefWidth="100.0" promptText="Valor Diária">
                            <font>
                               <Font name="Arial" size="14.0" />
                            </font>

@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -27,6 +28,7 @@ import model.entidades.Funcao;
  * @author guard
  */
 public class MainController implements Initializable {
+
     /**
      * Initializes the controller class.
      */
@@ -119,6 +121,18 @@ public class MainController implements Initializable {
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setResizable(false);
         stage.setTitle("Check-In");
+        stage.setScene(cena);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+    }
+
+    @FXML
+    private void abrirListaHospedagens(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/hospedagem/checkout/ListaHospedagem.fxml"));
+        Scene cena = new Scene(root);
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.setResizable(false);
+        stage.setTitle("Lista de Hospedagens");
         stage.setScene(cena);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

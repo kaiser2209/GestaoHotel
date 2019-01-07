@@ -2,6 +2,7 @@ package model.entidades;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -153,5 +154,8 @@ public class Pessoa {
         this.celular = celular;
     }
     
-    
+    public String getDataNascimentoFormatada() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataNascimento.format(dtf);
+    }
 }

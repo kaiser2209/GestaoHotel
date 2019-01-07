@@ -29,5 +29,14 @@ public class Hospede extends Pessoa {
         this.preferencia = preferencia;
     }
 
+    @Override
+    public boolean equals(Object outro) {
+        if (outro instanceof Hospede) {
+            return this.getCpf().equals(((Hospede) outro).getCpf());
+        }
+        
+        return false;
+    }
+
     
 }

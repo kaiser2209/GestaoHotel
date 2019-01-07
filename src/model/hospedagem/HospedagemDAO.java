@@ -10,18 +10,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import model.apartamento.ApartamentoDAO;
 import model.conexao.ConnectionFactory;
 import model.entidades.Hospedagem;
 import model.entidades.Hospede;
+import model.hospede.HospedeDAO;
 
 /**
  *
  * @author guard
  */
 public class HospedagemDAO {
+    private ApartamentoDAO aDao;
+    private HospedeDAO hDao;
+    
+    public HospedagemDAO() {
+        aDao = new ApartamentoDAO();
+        hDao = new HospedeDAO();
+    }
+    
     public void salvar(Hospedagem h) throws SQLException {
         String sql = "INSERT INTO hospedagem (id_quarto, data_entrada, "
-                + "procedencia, destino) VALUE (?, ?, ?, ?)";
+                + "procedencia, destino, valor_diaria) VALUE (?, ?, ?, ?, ?)";
         
         PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
         
@@ -29,6 +39,7 @@ public class HospedagemDAO {
         stmt.setString(2, h.getDataEntrada().toString());
         stmt.setString(3, h.getProcedencia());
         stmt.setString(4, h.getDestino());
+        stmt.setFloat(5, h.getDiaria());
         
         stmt.executeUpdate();
         
@@ -38,12 +49,13 @@ public class HospedagemDAO {
     }
     
     public void salvarHospedes(int id, ArrayList<Hospede> hospedes) throws SQLException {
-        String sql = "INSERT INTO cliente_hospedagem (id_hospedagem, id_cliente, "
+        String sql = "INSERT INTO cliente_hospedagem (id_hospedagem, id_cliente) "
                 + "VALUE (?, ?)";
         
         for (Hospede h : hospedes) {
             PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
-            stmt.setInt(id, h.getIdHospede());
+            stmt.setInt(1, id);
+            stmt.setInt(2, h.getIdHospede());
             
             stmt.executeUpdate();
             
@@ -80,5 +92,60 @@ public class HospedagemDAO {
         stmt.executeUpdate();
         
         stmt.close();
+    }
+    
+    public ArrayList<Hospedagem> listar(LocalDate hoje) throws SQLException {
+        String sql = "SELECT * From hospedagem where data_saida IS null AND "
+                + "data_entrada < ?";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setString(1, hoje.toString());
+        
+        ArrayList<Hospedagem> lista = new ArrayList<>();
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        while(rs.next()) {
+            Hospedagem h = new Hospedagem();
+            h.setId(rs.getInt("id"));
+            h.setApartamento(aDao.buscarPeloId(rs.getInt("id_quarto")));
+            h.setDataEntrada(LocalDate.parse(rs.getString("data_entrada")));
+            h.setProcedencia(rs.getString("procedencia"));
+            h.setDestino(rs.getString("destino"));
+            h.setHospedes(listarHospedes(h.getId()));
+            h.setDiaria(rs.getFloat("valor_diaria"));
+            
+            lista.add(h);
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return lista;
+    }
+    
+    public ArrayList<Hospede> listarHospedes(int id) throws SQLException {
+        String sql = "SELECT * From cliente_hospedagem where id_hospedagem = ? "
+                + "Order By id";
+        
+        PreparedStatement stmt = ConnectionFactory.prepararSQL(sql);
+        
+        stmt.setInt(1, id);
+        
+        ArrayList<Hospede> lista = new ArrayList<>();
+        
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()) {
+            Hospede h;
+            h = hDao.buscarPeloId(rs.getInt("id_cliente"));
+            
+            lista.add(h);
+        }
+        
+        rs.close();
+        stmt.close();
+        
+        return lista;
     }
 }

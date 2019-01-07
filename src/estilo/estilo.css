@@ -23,3 +23,7 @@ and open the template in the editor.
 .table-view .table-cell{
     -fx-font: 14px "Arial";    
 }
+
+#display .vpane {
+    -fx-border-color: lightgray;
+}

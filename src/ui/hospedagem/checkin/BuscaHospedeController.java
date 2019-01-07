@@ -53,7 +53,7 @@ public class BuscaHospedeController implements Initializable {
         // TODO
         hBO = new HospedeBO();
         try {
-            hospedes = hBO.listar();
+            hospedes = hospedesDisponiveis(hBO.listar(), TelaCheckInController.getHospedesSelecionados());
             filtroHospedes = filtrarDados(txtHospede.getText());
         } catch (SQLException ex) {
             Mensagem.mensagemDeErroBD();
@@ -138,5 +138,18 @@ public class BuscaHospedeController implements Initializable {
     private void close(Button button) {
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
+    }
+    
+    private ArrayList<Hospede> hospedesDisponiveis(ArrayList<Hospede> listaCompleta, 
+            ArrayList<Hospede> selecionados) {
+        
+        ArrayList<Hospede> lista = new ArrayList<>();
+        for (Hospede h : listaCompleta) {
+            if (!selecionados.contains(h)) {
+                lista.add(h);
+            }
+        }
+        
+        return lista;
     }
 }

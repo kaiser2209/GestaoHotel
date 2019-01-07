@@ -76,6 +76,7 @@ public class CadastroFuncaoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        txtNome.validate();
         cboNivelAcesso.getItems().addAll((short) 0, (short) 1, (short) 2, (short) 3, (short) 4, (short) 5);
         fBO = new FuncaoBO();
         regAtual = 0;

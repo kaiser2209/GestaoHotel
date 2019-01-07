@@ -5,7 +5,9 @@
  */
 package model.entidades;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +22,7 @@ public class Hospedagem {
     private LocalDate dataSaida;
     private String procedencia;
     private String destino;
+    private float diaria;
 
     public int getId() {
         return id;
@@ -77,5 +80,29 @@ public class Hospedagem {
         this.destino = destino;
     }
     
+    public String getNomeHospede() {
+        return this.hospedes.get(0).getNome();
+    }
     
+    public String getNumeroApartamento() {
+        return this.apartamento.getNumero();
+    }
+    
+    public String getDataEntradaFormatada() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return this.dataEntrada.format(dtf);
+    }
+
+    public float getDiaria() {
+        return diaria;
+    }
+
+    public void setDiaria(float diaria) {
+        this.diaria = diaria;
+    }
+    
+    public String getDiariaFormatada() {
+        DecimalFormat df = new DecimalFormat("R$ #0.00");
+        return df.format(this.diaria);
+    }
 }
